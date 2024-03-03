@@ -1,0 +1,26 @@
+{
+	"fmt": {
+		"lineWidth": 140,
+		"semiColons": false,
+		"singleQuote": true,
+		"useTabs": true
+	},
+	"lint": {
+		"rules": {
+			"include": [
+				"camel-case"
+			]
+		}
+	},
+	"lock": false,
+	"imports": {
+		"asserts": "https://deno.land/std@0.212.0/assert/mod.ts"
+	},
+	"compilerOptions": {
+		"lib": [
+			"dom",
+			"deno.window",
+			"deno.ns"
+		]
+	},
+}
