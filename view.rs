@@ -76,7 +76,7 @@ pub struct GenericElement {
 	id: Option<String>,
 	actions: Vec<ActionDefinition>,
 	children: Vec<GenericElement>,
-	class_list: String,
+	attributes: Vec<(String, String)>,
 	delete_after_ms: Option<u32>,
 }
 
@@ -86,17 +86,79 @@ impl GenericElement {
 			id: None,
 			actions: Vec::new(),
 			children: Vec::new(),
-			class_list: String::new(),
+			attributes: Vec::new(),
 			delete_after_ms: None,
 		}
+	}
+
+	pub fn action(mut self, action: ActionDefinition) -> GenericElement {
+		self.actions.push(action);
+
+		self
+	}
+
+	pub fn push_action(&mut self, action: ActionDefinition) {
+		self.actions.push(action)
+	}
+
+	pub fn append_actions(&mut self, actions: &mut Vec<ActionDefinition>) {
+		self.actions.append(actions)
+	}
+
+	pub fn attribute(mut self, name: impl Into<String>, value: impl Into<String>) -> GenericElement {
+		self.attributes.push((name.into(), value.into()));
+
+		self
+	}
+
+	pub fn set_attribute(&mut self, name: impl Into<String>, value: impl Into<String>) {
+		self.attributes.push((name.into(), value.into()))
 	}
 }
 
 #[derive(Debug, Serialize, Deserialize, JsonSchema)]
 pub struct ActionDefinition {
-	show_loader: bool,
+	loader_behavior: ActionLoaderBehavior,
 	id: String,
-	data: ElementActionPayloadKind,
+	event: String,
+	payload_kind: ElementActionPayloadKind,
+}
+
+impl ActionDefinition {
+	pub fn new(id: ViewId, event: impl Into<String>) -> ActionDefinition {
+		ActionDefinition {
+			loader_behavior: ActionLoaderBehavior::Hide,
+			id: id.to_string(),
+			event: event.into(),
+			payload_kind: ElementActionPayloadKind::Nothing,
+		}
+	}
+
+	pub fn loader_behavior(mut self, behavior: ActionLoaderBehavior) -> ActionDefinition {
+		self.loader_behavior = behavior;
+
+		self
+	}
+
+	pub fn set_loader_behavior(&mut self, behavior: ActionLoaderBehavior) {
+		self.loader_behavior = behavior
+	}
+
+	pub fn payload_kind(mut self, payload_kind: ElementActionPayloadKind) -> ActionDefinition {
+		self.payload_kind = payload_kind;
+
+		self
+	}
+
+	pub fn set_payload_kind(&mut self, payload_kind: ElementActionPayloadKind) {
+		self.payload_kind = payload_kind;
+	}
+}
+
+#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+pub enum ActionLoaderBehavior {
+	Show,
+	Hide,
 }
 
 #[derive(Debug, Serialize, Deserialize, JsonSchema)]
@@ -191,10 +253,40 @@ impl<T: View> ViewDriver<T> {
 		Ok(ViewDriver { context, root })
 	}
 
-	pub fn provide_upstream_events(&mut self, events: &str) -> ViewResult<()> {
-		self.context.path_change = None;
+	pub fn provide_upstream_message(&mut self, events: &str) {
+		match from_str::<Vec<Message>>(events) {
+			Ok(messages) => self.provide_upstream_messages(messages),
+			Err(err) => self.handle_error(NodeError::user(format!("failed to parse json for request events. {err}"))),
+		};
+	}
 
-		let messages = from_str::<Vec<Message>>(events).map_err(|_| NodeError::user("failed to deserialize request events"))?;
+	pub fn take_downstream_message(&mut self) -> Option<String> {
+		self.take_downstream_messages()
+			.map(|messages| match to_string(&messages) {
+				Ok(m) => Some(m),
+				Err(_) => {
+					error!("failed to stringify messages to json");
+					None
+				}
+			})
+			.flatten()
+	}
+
+	fn handle_error(&mut self, error: NodeError) {
+		match error {
+			NodeError::Internal(message) => {
+				error!("An internal error occurred in a view. {}", message);
+
+				self.context.queued_messages.push(Message::Error {
+					message: "An internal error occurred".into(),
+				});
+			}
+			NodeError::User(message) => self.context.queued_messages.push(Message::Error { message }),
+		}
+	}
+
+	fn provide_upstream_messages(&mut self, messages: Vec<Message>) {
+		self.context.path_change = None;
 
 		for message in messages {
 			if let Message::OnHashChanged { new_hash } = message {
@@ -203,22 +295,35 @@ impl<T: View> ViewDriver<T> {
 			}
 
 			if let Message::ActionTrigger { id, data } = message {
-				self.context
-					.actions
-					.insert(id.parse().map_err(|_| NodeError::user("failed to parse view id"))?, data);
+				let view_id = id.parse();
+
+				match view_id {
+					Ok(id) => {
+						self.context.actions.insert(id, data);
+					}
+					Err(_) => self.handle_error(NodeError::user("failed to parse view id")),
+				}
+
 				continue;
 			}
 
-			Err(NodeError::user("received unknown message"))?
+			self.handle_error(NodeError::user("received unknown message"));
 		}
 
-		self.drive_root();
-
-		Ok(())
+		match self.drive_root() {
+			Ok(_) => (),
+			Err(err) => self.handle_error(err),
+		}
 	}
 
-	pub fn take_downstream_events(&mut self) -> ViewResult<String> {
-		to_string(&self.context.queued_messages.drain(..).collect::<Vec<_>>()).map_err(|_| NodeError::internal("failed to serialize messages for client"))
+	fn take_downstream_messages(&mut self) -> Option<Vec<Message>> {
+		let res = self.context.queued_messages.drain(..).collect::<Vec<_>>();
+
+		if res.is_empty() {
+			None
+		} else {
+			Some(res)
+		}
 	}
 
 	fn drive_root(&mut self) -> ViewResult<()> {
@@ -228,7 +333,7 @@ impl<T: View> ViewDriver<T> {
 
 		if !self.context.actions.is_empty() {
 			if self.context.actions.len() == pre_update_actions {
-				Err(NodeError::internal("entire event loop iteration didn't consume any actions"))?
+				Err(NodeError::internal(format!("entire event loop iteration didn't consume any actions")))?
 			}
 			self.drive_root()?
 		}

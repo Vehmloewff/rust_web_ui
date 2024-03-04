@@ -1,4 +1,4 @@
-use super::{ActionDefinition, Context, ElementActionPayloadKind, GenericElement, NodeError, View, ViewId};
+use crate::{ActionDefinition, ActionLoaderBehavior, Context, NodeError, View, ViewId};
 use std::fmt::Debug;
 
 #[derive(Debug)]
@@ -53,11 +53,7 @@ impl<T: View> View for Button<T> {
 			let action_id = ViewId::generate();
 			let mut element = context.reduce_children();
 
-			element.actions.push(ActionDefinition {
-				show_loader: self.show_loader,
-				id: action_id.clone(),
-				data: ElementActionPayloadKind::Nothing,
-			});
+			element.push_action(ActionDefinition::new(action_id.clone(), "click").loader_behavior(ActionLoaderBehavior::Show));
 			context.push_child(element);
 
 			self.action_id.replace(action_id);
