@@ -60,6 +60,10 @@ impl Context {
 		self.queued_messages.push(DownstreamMessage::SetPageTitle { title: new_title.into() })
 	}
 
+	pub fn cancel_loader(&mut self, action_id: ViewId) {
+		self.queued_messages.push(DownstreamMessage::CancelLoader { action_id })
+	}
+
 	pub fn get_path_change(&self) -> Option<&str> {
 		self.path_change.as_deref()
 	}

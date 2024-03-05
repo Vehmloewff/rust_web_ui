@@ -201,6 +201,7 @@ impl ViewTree {
 
 					element.text_content = Some(content);
 				}
+				DownstreamMessage::CancelLoader { .. } => (),
 			};
 		}
 

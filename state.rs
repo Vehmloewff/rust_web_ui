@@ -20,6 +20,7 @@ pub enum DownstreamMessage {
 	SetPagePath { path: String },
 	SetPageTitle { title: String },
 	ShowError { message: String },
+	CancelLoader { action_id: ViewId },
 }
 
 #[derive(Debug, Serialize, Deserialize, JsonSchema)]

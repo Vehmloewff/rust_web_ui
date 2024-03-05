@@ -38,7 +38,11 @@ impl<T: View> Button<T> {
 		self.was_clicked
 	}
 
-	pub fn cancel_loader(&self, context: &mut Context) {}
+	pub fn cancel_loader(&self, context: &mut Context) {
+		if let Some(id) = &self.action_id {
+			context.cancel_loader(id.clone())
+		}
+	}
 }
 
 impl<T: View> View for Button<T> {
