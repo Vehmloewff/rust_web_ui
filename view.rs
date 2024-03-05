@@ -1,17 +1,12 @@
-use error_stack::{Report, ResultExt};
-use log::error;
-use rand::random;
-use rutils::errors;
-use schemars::JsonSchema;
-use serde::{Deserialize, Serialize};
-use serde_json::{from_str, to_string};
-use std::{
-	collections::HashMap,
-	fmt::{self, Debug, Display},
-	str::FromStr,
+use crate::{
+	state::{DownstreamMessage, ElementActionPayload, GenericElement, UpstreamMessage},
+	ViewId,
 };
-
-errors!(FailedToDecodeViewId, ViewIdBadLength);
+use futures_util::{poll, FutureExt};
+use log::error;
+use rutils::{rpc, RpcCaller, RpcHandler};
+use std::{collections::HashMap, fmt::Debug, task::Poll};
+use tokio::sync::mpsc::{channel, Receiver, Sender};
 
 pub enum NodeError {
 	User(String),
@@ -30,156 +25,11 @@ impl NodeError {
 	}
 }
 
-#[derive(Debug, Hash, PartialEq, Eq, Clone)]
-pub struct ViewId([u8; 8]);
-
-impl ViewId {
-	pub fn generate() -> ViewId {
-		ViewId(random())
-	}
-}
-
-impl Display for ViewId {
-	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-		f.write_str(&hex::encode(self.0))
-	}
-}
-
-impl FromStr for ViewId {
-	type Err = Report<Error>;
-
-	fn from_str(value: &str) -> Result<ViewId> {
-		let bytes = hex::decode(value).change_context(Error::FailedToDecodeViewId)?;
-		if bytes.len() != 8 {
-			Err(Error::ViewIdBadLength)?
-		}
-
-		Ok(ViewId(bytes.as_slice().try_into().unwrap()))
-	}
-}
-
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
-pub enum Message {
-	SetChildren { id: String, children: Vec<GenericElement> },
-	SetClassList { id: String, class_list: String },
-	AddCssChunk { id: String, content: String },
-	DeleteCssChunk { id: String, content: String },
-	SetPageHash { hash: String },
-	OnHashChanged { new_hash: String },
-	SetPageTitle { title: String },
-	ActionTrigger { id: String, data: ElementActionPayload },
-	Error { message: String },
-}
-
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
-pub struct GenericElement {
-	id: Option<String>,
-	actions: Vec<ActionDefinition>,
-	children: Vec<GenericElement>,
-	attributes: Vec<(String, String)>,
-	delete_after_ms: Option<u32>,
-}
-
-impl GenericElement {
-	pub fn new() -> GenericElement {
-		GenericElement {
-			id: None,
-			actions: Vec::new(),
-			children: Vec::new(),
-			attributes: Vec::new(),
-			delete_after_ms: None,
-		}
-	}
-
-	pub fn action(mut self, action: ActionDefinition) -> GenericElement {
-		self.actions.push(action);
-
-		self
-	}
-
-	pub fn push_action(&mut self, action: ActionDefinition) {
-		self.actions.push(action)
-	}
-
-	pub fn append_actions(&mut self, actions: &mut Vec<ActionDefinition>) {
-		self.actions.append(actions)
-	}
-
-	pub fn attribute(mut self, name: impl Into<String>, value: impl Into<String>) -> GenericElement {
-		self.attributes.push((name.into(), value.into()));
-
-		self
-	}
-
-	pub fn set_attribute(&mut self, name: impl Into<String>, value: impl Into<String>) {
-		self.attributes.push((name.into(), value.into()))
-	}
-}
-
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
-pub struct ActionDefinition {
-	loader_behavior: ActionLoaderBehavior,
-	id: String,
-	event: String,
-	payload_kind: ElementActionPayloadKind,
-}
-
-impl ActionDefinition {
-	pub fn new(id: ViewId, event: impl Into<String>) -> ActionDefinition {
-		ActionDefinition {
-			loader_behavior: ActionLoaderBehavior::Hide,
-			id: id.to_string(),
-			event: event.into(),
-			payload_kind: ElementActionPayloadKind::Nothing,
-		}
-	}
-
-	pub fn loader_behavior(mut self, behavior: ActionLoaderBehavior) -> ActionDefinition {
-		self.loader_behavior = behavior;
-
-		self
-	}
-
-	pub fn set_loader_behavior(&mut self, behavior: ActionLoaderBehavior) {
-		self.loader_behavior = behavior
-	}
-
-	pub fn payload_kind(mut self, payload_kind: ElementActionPayloadKind) -> ActionDefinition {
-		self.payload_kind = payload_kind;
-
-		self
-	}
-
-	pub fn set_payload_kind(&mut self, payload_kind: ElementActionPayloadKind) {
-		self.payload_kind = payload_kind;
-	}
-}
-
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
-pub enum ActionLoaderBehavior {
-	Show,
-	Hide,
-}
-
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
-pub enum ElementActionPayload {
-	InputValue { value: String },
-	Nothing,
-	Switch { value: bool },
-}
-
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
-pub enum ElementActionPayloadKind {
-	InputValue,
-	Nothing,
-	Switch,
-}
-
 pub struct Context {
 	actions: HashMap<ViewId, ElementActionPayload>,
 	path_change: Option<String>,
 	defined_children: Vec<GenericElement>,
-	queued_messages: Vec<Message>,
+	queued_messages: Vec<DownstreamMessage>,
 }
 
 impl Context {
@@ -195,8 +45,8 @@ impl Context {
 		Ok(())
 	}
 
-	pub fn reduce_children(&mut self) -> GenericElement {
-		let mut element = GenericElement::new();
+	pub fn reduce_children(&mut self, new_tag: impl Into<String>) -> GenericElement {
+		let mut element = GenericElement::new(new_tag);
 		element.children = self.defined_children.drain(..).collect();
 
 		element
@@ -207,7 +57,7 @@ impl Context {
 	}
 
 	pub fn set_page_title(&mut self, new_title: impl Into<String>) {
-		self.queued_messages.push(Message::SetPageTitle { title: new_title.into() })
+		self.queued_messages.push(DownstreamMessage::SetPageTitle { title: new_title.into() })
 	}
 
 	pub fn get_path_change(&self) -> Option<&str> {
@@ -220,124 +70,182 @@ pub trait View: Debug {
 }
 
 pub struct ViewDriver<T: View> {
-	context: Context,
 	root: T,
+	initial_path: String,
+	rpc_handler: RpcHandler<(), ViewDriverSubscription>,
 }
 
 impl<T: View> ViewDriver<T> {
-	pub fn new(mut root: T, path: String) -> Result<ViewDriver<T>> {
+	pub async fn drive(mut self) {
 		let mut context = Context {
 			actions: HashMap::new(),
 			defined_children: Vec::new(),
-			path_change: Some(path),
+			path_change: Some(self.initial_path),
 			queued_messages: Vec::new(),
 		};
 
-		match root.update(&mut context) {
-			Ok(_) => (),
-			Err(NodeError::Internal(message)) => {
-				error!("An internal error occurred in a view. {}", message);
+		fn handle_error(context: &mut Context, err: NodeError) {
+			match err {
+				NodeError::Internal(message) => {
+					error!("An internal error occurred in a view. {}", message);
 
-				context.queued_messages.push(Message::Error {
-					message: "An internal error occurred".into(),
-				});
-			}
-			Err(NodeError::User(message)) => context.queued_messages.push(Message::Error { message }),
+					context.queued_messages.push(DownstreamMessage::ShowError {
+						message: "An internal error occurred".into(),
+					});
+				}
+				NodeError::User(message) => context.queued_messages.push(DownstreamMessage::ShowError { message }),
+			};
 		}
 
-		context.queued_messages.push(Message::SetChildren {
-			id: "root".into(),
-			children: context.defined_children.drain(..).collect(),
-		});
+		fn drive_root<T: View>(context: &mut Context, root: &mut T) -> ViewResult<()> {
+			let pre_update_actions = context.actions.len();
 
-		Ok(ViewDriver { context, root })
-	}
+			root.update(context)?;
 
-	pub fn provide_upstream_message(&mut self, events: &str) {
-		match from_str::<Vec<Message>>(events) {
-			Ok(messages) => self.provide_upstream_messages(messages),
-			Err(err) => self.handle_error(NodeError::user(format!("failed to parse json for request events. {err}"))),
-		};
-	}
-
-	pub fn take_downstream_message(&mut self) -> Option<String> {
-		self.take_downstream_messages()
-			.map(|messages| match to_string(&messages) {
-				Ok(m) => Some(m),
-				Err(_) => {
-					error!("failed to stringify messages to json");
-					None
+			if !context.actions.is_empty() {
+				if context.actions.len() == pre_update_actions {
+					Err(NodeError::internal(format!("entire event loop iteration didn't consume any actions")))?
 				}
+				drive_root(context, root)?
+			}
+
+			Ok(())
+		}
+
+		if let Err(err) = drive_root(&mut context, &mut self.root) {
+			handle_error(&mut context, err)
+		}
+
+		if !context.defined_children.is_empty() {
+			context.queued_messages.push(DownstreamMessage::SetRootChildren {
+				children: context.defined_children.drain(..).collect(),
 			})
-			.flatten()
-	}
-
-	fn handle_error(&mut self, error: NodeError) {
-		match error {
-			NodeError::Internal(message) => {
-				error!("An internal error occurred in a view. {}", message);
-
-				self.context.queued_messages.push(Message::Error {
-					message: "An internal error occurred".into(),
-				});
-			}
-			NodeError::User(message) => self.context.queued_messages.push(Message::Error { message }),
 		}
-	}
 
-	fn provide_upstream_messages(&mut self, messages: Vec<Message>) {
-		self.context.path_change = None;
+		loop {
+			let request = match self.rpc_handler.next().await {
+				Some(req) => req,
+				None => break,
+			};
 
-		for message in messages {
-			if let Message::OnHashChanged { new_hash } = message {
-				self.context.path_change = Some(new_hash);
-				continue;
-			}
+			let (downstream_sender, downstream_receiver) = channel(1000);
+			let (upstream_sender, mut upstream_receiver) = channel(1000);
 
-			if let Message::ActionTrigger { id, data } = message {
-				let view_id = id.parse();
+			request.responder.respond(ViewDriverSubscription {
+				downstream_receiver,
+				upstream_sender,
+			});
 
-				match view_id {
-					Ok(id) => {
-						self.context.actions.insert(id, data);
+			loop {
+				let downstream_messages = context.queued_messages.drain(..).collect::<Vec<_>>();
+				if !downstream_messages.is_empty() {
+					// if we fail to send, that is probably because the handle was dropped, we add the message back to the queue so that they will be sent
+					// downstream on the handle
+					//
+					// We don't need to break here because the break should happen at the next .recv call
+					if let Err(mut err) = downstream_sender.send(downstream_messages).await {
+						context.queued_messages.append(&mut err.0);
 					}
-					Err(_) => self.handle_error(NodeError::user("failed to parse view id")),
 				}
 
-				continue;
+				let messages = match upstream_receiver.recv().await {
+					Some(messages) => messages,
+					None => break,
+				};
+
+				context.path_change = None;
+
+				for message in messages {
+					if let UpstreamMessage::OnPagePathChanged { new_path } = message {
+						context.path_change = Some(new_path);
+						continue;
+					}
+
+					if let UpstreamMessage::ActionTrigger { id, data } = message {
+						context.actions.insert(id, data);
+						continue;
+					}
+
+					handle_error(&mut context, NodeError::user("received unknown message"));
+				}
+
+				if let Err(err) = drive_root(&mut context, &mut self.root) {
+					handle_error(&mut context, err)
+				}
 			}
-
-			self.handle_error(NodeError::user("received unknown message"));
-		}
-
-		match self.drive_root() {
-			Ok(_) => (),
-			Err(err) => self.handle_error(err),
 		}
 	}
+}
 
-	fn take_downstream_messages(&mut self) -> Option<Vec<Message>> {
-		let res = self.context.queued_messages.drain(..).collect::<Vec<_>>();
+pub struct ViewDriverHandle {
+	rpc_caller: RpcCaller<(), ViewDriverSubscription>,
+}
 
-		if res.is_empty() {
-			None
-		} else {
-			Some(res)
-		}
+impl ViewDriverHandle {
+	pub async fn subscribe(&self) -> Option<ViewDriverSubscription> {
+		self.rpc_caller.call(()).await
+	}
+}
+
+pub fn create_driver<T: View + Debug>(root: T, path: impl Into<String>) -> (ViewDriverHandle, ViewDriver<T>) {
+	let (rpc_caller, rpc_handler) = rpc(1000);
+
+	let driver = ViewDriver {
+		root,
+		initial_path: path.into(),
+		rpc_handler,
+	};
+
+	let handle = ViewDriverHandle { rpc_caller };
+
+	(handle, driver)
+}
+
+pub struct ViewDriverSubscription {
+	upstream_sender: Sender<Vec<UpstreamMessage>>,
+	downstream_receiver: Receiver<Vec<DownstreamMessage>>,
+}
+
+impl ViewDriverSubscription {
+	/// Take some messages to be sent downstream. Returns `None` if the `ViewDriver` subscribed to is dropped.
+	pub async fn take_next_downstream_messages(&mut self) -> Option<Vec<DownstreamMessage>> {
+		self.downstream_receiver.recv().await
 	}
 
-	fn drive_root(&mut self) -> ViewResult<()> {
-		let pre_update_actions = self.context.actions.len();
+	/// Takes the next series messages that is currently available without waiting.
+	pub async fn take_current_downstream_messages(&mut self) -> Option<Vec<DownstreamMessage>> {
+		match poll!(self.downstream_receiver.recv().boxed()) {
+			Poll::Ready(inner) => Some(inner),
+			Poll::Pending => None,
+		}
+		.flatten()
+	}
 
-		self.root.update(&mut self.context)?;
+	/// Takes all messages that are current available without waiting.
+	pub async fn take_many_current_downstream_messages(&mut self) -> Option<Vec<DownstreamMessage>> {
+		let mut messages: Option<Vec<DownstreamMessage>> = None;
 
-		if !self.context.actions.is_empty() {
-			if self.context.actions.len() == pre_update_actions {
-				Err(NodeError::internal(format!("entire event loop iteration didn't consume any actions")))?
+		loop {
+			let mut new_messages = match self.take_current_downstream_messages().await {
+				Some(messages) => messages,
+				None => break,
+			};
+
+			if let Some(messages) = &mut messages {
+				messages.append(&mut new_messages);
+			} else {
+				messages = Some(new_messages)
 			}
-			self.drive_root()?
 		}
 
-		Ok(())
+		messages
+	}
+
+	/// Try to send `messages` upstream, removing them the vector. If the send fails, no messages will be removed from the vector.
+	pub async fn send_upstream_messages(&self, messages: &mut Vec<UpstreamMessage>) {
+		match self.upstream_sender.send(messages.drain(..).collect()).await {
+			Err(mut err) => messages.append(&mut err.0),
+			_ => (),
+		};
 	}
 }

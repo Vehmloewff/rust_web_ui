@@ -1,4 +1,7 @@
-use crate::{ActionDefinition, ActionLoaderBehavior, Context, NodeError, View, ViewId};
+use crate::{
+	state::{ActionDefinition, ActionLoaderBehavior},
+	Context, NodeError, View, ViewId,
+};
 use std::fmt::Debug;
 
 #[derive(Debug)]
@@ -51,11 +54,11 @@ impl<T: View> View for Button<T> {
 			}
 		} else {
 			let action_id = ViewId::generate();
-			let mut element = context.reduce_children();
+			let element = context
+				.reduce_children("button")
+				.action(ActionDefinition::new(action_id.clone(), "click").loader_behavior(ActionLoaderBehavior::Show));
 
-			element.push_action(ActionDefinition::new(action_id.clone(), "click").loader_behavior(ActionLoaderBehavior::Show));
 			context.push_child(element);
-
 			self.action_id.replace(action_id);
 		}
 
