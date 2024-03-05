@@ -23,9 +23,13 @@ struct PhysicalTreeNode {
 }
 
 impl PhysicalTreeNode {
-	fn write_opening_tag(&self, f: &mut fmt::Formatter) -> fmt::Result {
+	fn write_opening_tag(&self, f: &mut fmt::Formatter, id: Option<&ViewId>) -> fmt::Result {
 		let tag = &self.tag;
 		write!(f, "<{tag}")?;
+
+		if let Some(id) = id {
+			write!(f, " id=\"{id}\"")?;
+		}
 
 		for (name, value) in &self.attributes {
 			write!(f, " {name}=\"{value}\"")?;
@@ -34,9 +38,9 @@ impl PhysicalTreeNode {
 		for action in &self.actions {
 			let event = &action.event;
 			let id = &action.id;
-			let kind = to_string(&action.payload_kind).unwrap();
+			let kind = to_string(&action.payload_kind).unwrap().replace('"', "\'");
 
-			write!(f, " on{event}=\"window.triggerAction('{id}', event, '{kind}')\"")?;
+			write!(f, " on{event}=\"window.triggerAction('{id}', event, {kind})\"")?;
 		}
 
 		write!(f, ">")?;
@@ -205,10 +209,10 @@ impl ViewTree {
 
 	fn write_nodes_html(&self, nodes: &Vec<TreeNode>, f: &mut fmt::Formatter) -> fmt::Result {
 		for node in nodes {
-			let physical = match node {
-				TreeNode::Physical(physical) => physical,
+			let (physical, id) = match node {
+				TreeNode::Physical(physical) => (physical, None),
 				TreeNode::Reference(id) => match self.nodes.get(id) {
-					Some(physical) => physical,
+					Some(physical) => (physical, Some(id)),
 					None => continue,
 				},
 			};
@@ -217,7 +221,7 @@ impl ViewTree {
 				continue;
 			}
 
-			physical.write_opening_tag(f)?;
+			physical.write_opening_tag(f, id)?;
 
 			if let Some(text) = &physical.text_content {
 				write!(f, "{}", text)?;
@@ -240,7 +244,13 @@ impl Display for ViewTree {
 			write!(head, "<title>{title}</title>")?;
 		}
 
-		write!(f, "<!DOCTYPE html><html lang=\"{lang}\"><head>{head}<head><body>")?;
+		write!(f, "<!DOCTYPE html><html lang=\"{lang}\"><head>{head}")?;
+
+		for (id, css) in &self.css {
+			write!(f, "<style id=\"{id}\">{css}</style>")?;
+		}
+
+		write!(f, "<head><body>")?;
 
 		self.write_nodes_html(&self.root_nodes, f)?;
 

@@ -9,6 +9,10 @@ use warp::{filters::path::FullPath, reply::html, Filter};
 async fn main() {
 	pretty_env_logger::init();
 
+	let favicon_route = warp::get()
+		.and(warp::path("favicon.ico"))
+		.map(|| warp::reply::with_status("not found", warp::http::StatusCode::NOT_FOUND));
+
 	let html_route = warp::get().and(warp::path::full()).then(|path: FullPath| async move {
 		let (handle, driver) = create_driver(Button::new(Text::new("hello, world")), path.as_str());
 
@@ -29,5 +33,5 @@ async fn main() {
 		html(tree.to_string())
 	});
 
-	warp::serve(html_route).run(([127, 0, 0, 1], 3030)).await;
+	warp::serve(favicon_route.or(html_route)).run(([127, 0, 0, 1], 3030)).await;
 }

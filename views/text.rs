@@ -21,6 +21,7 @@ impl View for Text {
 			self.view_id = Some(ViewId::generate());
 
 			let mut element = GenericElement::new("span");
+			element.id = self.view_id.clone();
 			element.text_content = self.label.take();
 
 			context.push_child(element)
