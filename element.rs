@@ -223,7 +223,6 @@ impl Element {
 
 impl Element {
 	pub fn get_updates(element: &mut Element, updates: &mut Vec<ElementUpdate>) {
-		dbg!(&element);
 		let current_diff = match element.current_diff.replace(ElementDiff::new()) {
 			Some(diff) => diff,
 			None => return,
