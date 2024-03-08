@@ -1,4 +1,4 @@
-use crate::{ctx::Ctx, Button, ViewId};
+use crate::{ctx::Ctx, State, Ui, ViewId};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -90,25 +90,6 @@ impl Node {
 	}
 }
 
-pub struct Ui<'a> {
-	node: &'a mut Node,
-	context: &'a mut Ctx,
-}
-
-impl Ui<'_> {
-	pub fn text(&mut self, text: &str) {
-		self.node.set_text(text)
-	}
-
-	pub fn include<'a, T: UiBuilder<'a>>(&'a mut self) -> T {
-		T::new(self.node, self.context)
-	}
-
-	pub fn button(&mut self) -> Button<'_> {
-		self.include::<Button>()
-	}
-}
-
 #[derive(Debug)]
 struct TextDiff {
 	was_changed: bool,
@@ -177,11 +158,18 @@ impl ElementDiff {
 }
 
 #[derive(Debug)]
+struct ElementChild {
+	index: usize,
+	node: Node,
+	state: State,
+}
+
+#[derive(Debug)]
 pub struct Element {
 	id: ViewId,
 	tag: String,
 	current_diff: Option<ElementDiff>,
-	keyed_children: HashMap<String, (usize, Node)>,
+	keyed_children: HashMap<String, ElementChild>,
 }
 
 impl Element {
@@ -202,14 +190,21 @@ impl Element {
 }
 
 impl Element {
-	pub fn child<'a>(&'a mut self, key: &str, context: &'a mut Ctx) -> Ui<'a> {
+	pub fn child<'a, T>(&'a mut self, key: &str, context: &'a mut Ctx, _widget: T) -> Ui<'a, T> {
 		let has_key = self.keyed_children.contains_key(key);
 
 		if !has_key {
-			self.keyed_children.insert(key.to_owned(), (self.keyed_children.len(), Node::New));
+			self.keyed_children.insert(
+				key.to_owned(),
+				ElementChild {
+					index: self.keyed_children.len(),
+					node: Node::New,
+					state: State::new(),
+				},
+			);
 		}
 
-		if let Some((_, node)) = self.keyed_children.get(key) {
+		if let Some(ElementChild { node, .. }) = self.keyed_children.get(key) {
 			self.remember_touch(
 				key,
 				match &node {
@@ -220,9 +215,9 @@ impl Element {
 			);
 		};
 
-		let (_, node) = self.keyed_children.get_mut(key).unwrap();
+		let ElementChild { node, state, .. } = self.keyed_children.get_mut(key).unwrap();
 
-		Ui { context, node }
+		Ui::new(node, state, context)
 	}
 }
 
@@ -252,7 +247,7 @@ impl Element {
 		}
 
 		for (key, kind) in current_diff.touched_keys {
-			let (index, node) = element.keyed_children.get_mut(&key).unwrap();
+			let ElementChild { index, node, .. } = element.keyed_children.get_mut(&key).unwrap();
 
 			let did_make = match &kind {
 				TouchedChildKind::Created => true,
@@ -284,11 +279,11 @@ impl Element {
 	pub fn get_repr(element: &Element) -> ElementRepr {
 		let mut children = Vec::new();
 
-		for (key, (index, child)) in &element.keyed_children {
+		for (key, ElementChild { index, node, .. }) in &element.keyed_children {
 			children.push(ElementChildRepr {
 				key: key.clone(),
 				index: index.clone(),
-				node: child.to_repr(),
+				node: node.to_repr(),
 			})
 		}
 
@@ -302,18 +297,16 @@ impl Element {
 	pub fn start_diffing(element: &mut Element) {
 		element.current_diff.replace(ElementDiff::new());
 
-		for (_, (_, child)) in &mut element.keyed_children {
-			Node::start_diffing(child)
+		for (_, child) in &mut element.keyed_children {
+			Node::start_diffing(&mut child.node)
 		}
 	}
 }
 
-pub trait UiBuilder<'a> {
-	fn new(node: &'a mut Node, context: &'a mut Ctx) -> Self;
-}
-
 #[cfg(test)]
 mod tests {
+	use crate::Button;
+
 	use super::*;
 	use pretty_assertions::assert_eq;
 
@@ -322,10 +315,10 @@ mod tests {
 	}
 
 	impl Counter {
-		pub fn render(&mut self, el: &mut Element, ctx: &mut Ctx) {
-			el.child("decrement_button", ctx).button().label("decrement");
-			el.child("label", ctx).text(&format!("current count is {}", &self.count));
-			el.child("increment_button", ctx).button().label("increment");
+		fn render(&mut self, el: &mut Element, ctx: &mut Ctx) {
+			el.child("decrement_button", ctx, Button); // .label("increment");
+			el.child("label", ctx, Button); // .text(&format!("current count is {}", &self.count));
+			el.child("increment_button", ctx, Button); //.button().label("increment");
 
 			self.count += 1;
 		}
