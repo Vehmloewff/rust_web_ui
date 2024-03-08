@@ -30,7 +30,7 @@ impl<T: View> Button<T> {
 		&self.child
 	}
 
-	pub fn get_mut(&mut self) -> &mut T {
+	pub fn get_child_mut(&mut self) -> &mut T {
 		&mut self.child
 	}
 
