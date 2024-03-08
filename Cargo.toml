@@ -23,3 +23,6 @@ tokio = { version = "1", features = ["full"] }
 warp = "0.3.6"
 rutils = { git = "ssh://git@github.com/Vehmloewff/rutils", rev = "0.1.0" }
 error-stack = "0.4.1"
+
+[dev-dependencies]
+pretty_assertions = "1.4.0"
