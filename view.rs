@@ -165,8 +165,8 @@ impl<T: View> ViewDriver<T> {
 						continue;
 					}
 
-					if let UpstreamMessage::ActionTrigger { id, data } = message {
-						context.actions.insert(id, data);
+					if let UpstreamMessage::ActionTrigger { element_id, data, .. } = message {
+						context.actions.insert(element_id, data);
 						continue;
 					}
 

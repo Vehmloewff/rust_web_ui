@@ -5,8 +5,14 @@ use serde_json::Value;
 
 #[derive(Debug, Serialize, Deserialize, JsonSchema)]
 pub enum UpstreamMessage {
-	OnPagePathChanged { new_path: String },
-	ActionTrigger { id: ViewId, data: ElementActionPayload },
+	OnPagePathChanged {
+		new_path: String,
+	},
+	ActionTrigger {
+		element_id: ViewId,
+		event_name: String,
+		data: ElementActionPayload,
+	},
 }
 
 #[derive(Debug, Serialize, Deserialize, JsonSchema)]
