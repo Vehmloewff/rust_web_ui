@@ -155,7 +155,6 @@ impl ViewTree {
 	}
 
 	pub fn apply_downstream_messages(&mut self, messages: Vec<DownstreamMessage>) -> Result<()> {
-		dbg!(&messages);
 		for message in messages {
 			match message {
 				DownstreamMessage::AddCssChunk { id, content } => {
