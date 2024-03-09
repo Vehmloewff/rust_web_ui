@@ -1,7 +1,7 @@
 use crate::{ctx::Ctx, State, Ui, ViewId};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
 pub enum NodeRepr {
@@ -39,6 +39,11 @@ pub enum ElementUpdate {
 		key: String,
 		index: usize,
 		node: NodeRepr,
+	},
+	SetAttribute {
+		element_id: ViewId,
+		key: String,
+		value: Option<String>,
 	},
 }
 
@@ -149,11 +154,15 @@ enum TouchedChildKind {
 #[derive(Debug)]
 struct ElementDiff {
 	touched_keys: HashMap<String, TouchedChildKind>,
+	touched_attributes: HashMap<String, bool>,
 }
 
 impl ElementDiff {
 	pub fn new() -> ElementDiff {
-		ElementDiff { touched_keys: HashMap::new() }
+		ElementDiff {
+			touched_keys: HashMap::new(),
+			touched_attributes: HashMap::new(),
+		}
 	}
 }
 
@@ -170,6 +179,7 @@ pub struct Element {
 	tag: String,
 	current_diff: Option<ElementDiff>,
 	keyed_children: HashMap<String, ElementChild>,
+	attributes: HashMap<String, String>,
 }
 
 impl Element {
@@ -179,6 +189,22 @@ impl Element {
 			tag: tag.into(),
 			current_diff: None,
 			keyed_children: HashMap::new(),
+			attributes: HashMap::new(),
+		}
+	}
+
+	pub fn set_attribute(&mut self, name: &str, value: &str) {
+		let should_set = match self.attributes.get(name) {
+			Some(old_value) => old_value != value,
+			None => true,
+		};
+
+		if should_set {
+			self.attributes.insert(name.to_string(), value.to_string());
+		}
+
+		if let Some(diff) = &mut self.current_diff {
+			diff.touched_attributes.insert(name.to_owned(), should_set);
 		}
 	}
 
@@ -228,10 +254,45 @@ impl Element {
 			None => return,
 		};
 
+		Element::get_attribute_updates(element, updates, current_diff.touched_attributes);
+		Element::get_children_updates(element, updates, current_diff.touched_keys);
+	}
+
+	fn get_attribute_updates(element: &mut Element, updates: &mut Vec<ElementUpdate>, set_names: HashMap<String, bool>) {
+		let mut to_remove = Vec::new();
+
+		for (name, _) in &element.attributes {
+			if !set_names.contains_key(name) {
+				to_remove.push(name.clone())
+			}
+		}
+
+		for name in to_remove {
+			updates.push(ElementUpdate::SetAttribute {
+				element_id: element.id.clone(),
+				key: name,
+				value: None,
+			})
+		}
+
+		for (name, was_updated) in set_names {
+			if was_updated {
+				let value = element.attributes.get(&name).unwrap().clone();
+
+				updates.push(ElementUpdate::SetAttribute {
+					element_id: element.id.clone(),
+					key: name,
+					value: Some(value),
+				})
+			}
+		}
+	}
+
+	fn get_children_updates(element: &mut Element, updates: &mut Vec<ElementUpdate>, touched_keys: HashMap<String, TouchedChildKind>) {
 		let mut keys_to_remove = Vec::new();
 
 		for (key, _) in &element.keyed_children {
-			if !current_diff.touched_keys.contains_key(key) {
+			if !touched_keys.contains_key(key) {
 				keys_to_remove.push(key.to_owned())
 			}
 		}
@@ -245,7 +306,7 @@ impl Element {
 			})
 		}
 
-		for (key, kind) in current_diff.touched_keys {
+		for (key, kind) in touched_keys {
 			let ElementChild { index, node, .. } = element.keyed_children.get_mut(&key).unwrap();
 
 			let did_make = match &kind {
