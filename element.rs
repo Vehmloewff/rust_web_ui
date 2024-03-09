@@ -31,7 +31,7 @@ pub enum ElementUpdate {
 	},
 	SetAttribute {
 		element_id: ViewId,
-		key: String,
+		name: String,
 		value: Option<String>,
 	},
 }
@@ -43,6 +43,13 @@ pub enum Node {
 }
 
 impl Node {
+	pub fn element(&self) -> Option<&Element> {
+		match self {
+			Node::Element(element) => Some(element),
+			Node::New => None,
+		}
+	}
+
 	pub fn get_element(&mut self, creator: impl FnOnce() -> Element) -> &mut Element {
 		if let Node::Element(element) = self {
 			return element;
@@ -174,7 +181,7 @@ impl Element {
 
 			updates.push(ElementUpdate::SetAttribute {
 				element_id: element.id.clone(),
-				key: name,
+				name,
 				value: None,
 			})
 		}
@@ -185,7 +192,7 @@ impl Element {
 
 				updates.push(ElementUpdate::SetAttribute {
 					element_id: element.id.clone(),
-					key: name,
+					name,
 					value: Some(value),
 				})
 			}
@@ -269,7 +276,7 @@ impl Element {
 
 #[cfg(test)]
 mod tests {
-	use crate::Button;
+	use crate::{Button, Label};
 
 	use super::*;
 	use pretty_assertions::assert_eq;
@@ -280,9 +287,18 @@ mod tests {
 
 	impl Counter {
 		fn render(&mut self, el: &mut Element, ctx: &mut Ctx) {
-			el.child("decrement_button", ctx, Button); // .label("increment");
-			el.child("label", ctx, Button); // .text(&format!("current count is {}", &self.count));
-			el.child("increment_button", ctx, Button); //.button().label("increment");
+			el.child("decrement_button", ctx, Button).conf(|props| {
+				props.label("Decrement");
+			});
+
+			let label = format!("current count is {}", self.count);
+			el.child("label", ctx, Label).conf(|props| {
+				props.text(&label);
+			});
+
+			el.child("increment_button", ctx, Button).conf(|props| {
+				props.label("Increment");
+			});
 
 			self.count += 1;
 		}
@@ -321,14 +337,14 @@ mod tests {
 		Element::get_updates(&mut root, &mut updates);
 
 		assert_eq!(updates.len(), 1);
-		// assert_eq!(
-		// 	updates.get(0).unwrap(),
-		// 	&ElementUpdate::SetAttribute {
-		// 		element_id: root.id.clone(),
-		// 		key: "label".into(),
-		// 		index: 1,
-		// 	}
-		// );
+		assert_eq!(
+			updates.get(0).unwrap(),
+			&ElementUpdate::SetAttribute {
+				element_id: root.keyed_children.get("label").unwrap().node.element().unwrap().id.clone(),
+				name: "__textContent".into(),
+				value: Some("current count is 1".into())
+			}
+		);
 
 		println!("after this:::");
 
@@ -340,16 +356,13 @@ mod tests {
 		dbg!(&updates);
 
 		assert_eq!(updates.len(), 1);
-		// assert_eq!(
-		// 	updates.get(0).unwrap(),
-		// 	&ElementUpdate::MakeChild {
-		// 		element_id: root.id,
-		// 		key: "label".into(),
-		// 		index: 1,
-		// 		node: NodeRepr::Text(TextRepr {
-		// 			text: "current count is 2".into()
-		// 		})
-		// 	}
-		// );
+		assert_eq!(
+			updates.get(0).unwrap(),
+			&ElementUpdate::SetAttribute {
+				element_id: root.keyed_children.get("label").unwrap().node.element().unwrap().id.clone(),
+				name: "__textContent".into(),
+				value: Some("current count is 2".into())
+			}
+		);
 	}
 }
