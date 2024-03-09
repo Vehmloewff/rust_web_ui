@@ -1,33 +1,15 @@
-use std::default;
-
-use crate::{ctx::Ctx, Element, Node, Widget};
-
-// pub struct Button<'a> {
-// 	element: &'a mut Element,
-// 	context: &'a mut Ctx,
-// }
-
-// impl Button<'_> {
-// 	pub fn label(&mut self, text: &str) {
-// 		self.element.child("text", self.context).text(text);
-// 	}
-// }
-
-// impl<'a> UiBuilder<'a> for Button<'a> {
-// 	type State = ();
-
-// 	fn new(node: &'a mut Node, _: &mut (), context: &'a mut Ctx) -> Button<'a> {
-// 		Button {
-// 			element: node.get_element(|| Element::new("button")),
-// 			context,
-// 		}
-// 	}
-// }
+use crate::{ctx::Ctx, Element, Widget};
 
 pub struct Button;
 
 pub struct ButtonProps<'a> {
 	label: &'a str,
+}
+
+impl<'a> ButtonProps<'a> {
+	pub fn label(&mut self, text: &'a str) {
+		self.label = text
+	}
 }
 
 impl<'a> Default for ButtonProps<'a> {
@@ -43,7 +25,7 @@ impl<'a> Widget<'a> for Button {
 		"button".into()
 	}
 
-	fn render(el: &mut Element, ctx: &mut Ctx, props: Self::Props) {
-		// TODO here
+	fn render(el: &mut Element, _ctx: &mut Ctx, props: Self::Props) {
+		el.set_attribute("__textContent", props.label)
 	}
 }
