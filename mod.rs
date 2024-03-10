@@ -6,8 +6,8 @@ mod label;
 mod ui;
 mod view;
 mod view_id;
-mod view_syncer;
 mod view_tree;
+mod html;
 
 pub mod state;
 pub mod views;
@@ -21,3 +21,4 @@ pub use ui::*;
 pub use view::*;
 pub use view_id::ViewId;
 pub use view_tree::*;
+pub use html::*;

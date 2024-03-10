@@ -15,6 +15,7 @@ pub struct ElementRepr {
 	pub id: ViewId,
 	pub tag: String,
 	pub children: Vec<ElementChildRepr>,
+	pub attributes: Vec<(String, String)>,
 }
 
 #[derive(Debug, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
@@ -244,6 +245,11 @@ impl Element {
 
 	pub fn get_repr(element: &Element) -> ElementRepr {
 		let mut children = Vec::new();
+		let mut attributes = Vec::new();
+
+		for (name, value) in &element.attributes {
+			attributes.push((name.clone(), value.clone()));
+		}
 
 		for (key, ElementChild { index, node, .. }) in &element.keyed_children {
 			let element = match node {
@@ -262,6 +268,7 @@ impl Element {
 			id: element.id.clone(),
 			tag: element.tag.clone(),
 			children,
+			attributes,
 		}
 	}
 
