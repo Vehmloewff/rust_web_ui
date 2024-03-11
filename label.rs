@@ -1,4 +1,4 @@
-use crate::{Ctx, Element, Widget};
+use crate::{Ctx, Widget};
 
 pub struct Label;
 
@@ -25,7 +25,7 @@ impl<'a> Widget<'a> for Label {
 		"span".into()
 	}
 
-	fn render(el: &mut Element, _ctx: &mut Ctx, props: LabelProps) {
-		el.set_attribute("__textContent", props.text)
+	fn render(mut ctx: Ctx<'_>, props: LabelProps) {
+		ctx.set_attribute("__textContent", props.text)
 	}
 }

@@ -1,4 +1,4 @@
-use crate::{ctx::Ctx, Element, Widget};
+use crate::{Ctx, Widget};
 
 pub struct Button;
 
@@ -25,7 +25,7 @@ impl<'a> Widget<'a> for Button {
 		"button".into()
 	}
 
-	fn render(el: &mut Element, _ctx: &mut Ctx, props: Self::Props) {
-		el.set_attribute("__textContent", props.label)
+	fn render(mut ctx: Ctx<'_>, props: Self::Props) {
+		ctx.set_attribute("__textContent", props.label)
 	}
 }
