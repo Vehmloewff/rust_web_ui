@@ -1,11 +1,23 @@
 use rust_web_ui::{Button, Ctx, Label, StatefulWidget, View};
+use warp::{filters::path::FullPath, reply::html, Filter};
 
-fn main() {
-	let mut view = View::new("Rust Web Ui".into(), "/hello".into());
+#[tokio::main]
+async fn main() {
+	pretty_env_logger::init();
 
-	view.define_root("main", Counter).sun(|_| {});
+	let favicon_route = warp::get()
+		.and(warp::path("favicon.ico"))
+		.map(|| warp::reply::with_status("not found", warp::http::StatusCode::NOT_FOUND));
 
-	println!("{view}");
+	let html_route = warp::get().and(warp::path::full()).then(|path: FullPath| async move {
+		let mut view = View::new("Rust Web Ui".into(), path.as_str().into());
+
+		view.define_root("main", Counter).sun(|_| {});
+
+		html(view.to_string())
+	});
+
+	warp::serve(favicon_route.or(html_route)).run(([127, 0, 0, 1], 3030)).await;
 }
 
 struct Counter;

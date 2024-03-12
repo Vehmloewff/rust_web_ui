@@ -1,22 +1,7 @@
-use crate::{State, Ui, ViewId, Window};
+use crate::{ElementChildRepr, ElementRepr, State, Ui, ViewId, Window};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
-
-#[derive(Debug, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
-pub struct ElementChildRepr {
-	pub key: String,
-	pub index: usize,
-	pub element: ElementRepr,
-}
-
-#[derive(Debug, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
-pub struct ElementRepr {
-	pub id: ViewId,
-	pub tag: String,
-	pub children: Vec<ElementChildRepr>,
-	pub attributes: Vec<(String, String)>,
-}
 
 #[derive(Debug, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
 pub enum ElementUpdate {
@@ -93,7 +78,7 @@ pub struct Element {
 	tag: String,
 	current_diff: Option<ElementDiff>,
 	keyed_children: HashMap<String, ElementChild>,
-	attributes: HashMap<String, String>,
+	pub attributes: HashMap<String, String>,
 }
 
 impl Element {
@@ -240,7 +225,17 @@ impl Element {
 			attributes.push((name.clone(), value.clone()));
 		}
 
-		for (key, ElementChild { index, node, .. }) in &self.keyed_children {
+		let mut ordered_children = Vec::new();
+
+		for (key, ElementChild { index, .. }) in &self.keyed_children {
+			ordered_children.push((index, key));
+		}
+
+		ordered_children.sort_by(|a, b| a.0.cmp(b.0));
+
+		for (_, key) in ordered_children {
+			let ElementChild { node, .. } = self.keyed_children.get(key).unwrap();
+
 			let element = match node {
 				Node::Element(element) => element,
 				Node::New => continue,
@@ -248,7 +243,6 @@ impl Element {
 
 			children.push(ElementChildRepr {
 				key: key.clone(),
-				index: index.clone(),
 				element: element.get_repr(),
 			})
 		}
