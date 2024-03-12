@@ -96,14 +96,73 @@ impl Size {
 	}
 }
 
+pub enum Screen {
+	Small,
+	Medium,
+	Large,
+	ExtraLarge(usize),
+}
+
+impl Screen {
+	pub fn get_size(&self) -> usize {
+		match self {
+			Screen::Small => 640,
+			Screen::Medium => 768,
+			Screen::Large => 1024,
+			Screen::ExtraLarge(times) => (240 * times) + 1024,
+		}
+	}
+}
+
 pub enum Style {
 	Width(Size),
 	Height(Size),
-	TextColor(Color),
-	TextSize(Size),
-	Bg(Color),
-	InlineFlex,
+	Size(Size),
+
+	Padding(Size),
+	PaddingLeft(Size),
+	PaddingRight(Size),
+	PaddingTop(Size),
+	PaddingBottom(Size),
+	PaddingX(Size),
+	PaddingY(Size),
+
+	Margin(Size),
+	MarginLeft(Size),
+	MarginRight(Size),
+	MarginTop(Size),
+	MarginBottom(Size),
+	MarginX(Size),
+	MarginY(Size),
+
+	SpaceX(Size),
+	SpaceY(Size),
+
 	Flex,
+	InlineFlex,
+	JustifyBetween,
+	JustifyCenter,
+	ItemsCenter,
+
+	InlineBlock,
+	Block,
+
+	Rounded(Size),
+
+	Color(Color),
+	TextColor(Color),
+
+	TextSize(Size),
+	FontSemibold,
+	FontBold,
+	FontLight,
+
+	OnHover(&'static [Style]),
+	OnActive(&'static [Style]),
+	OnFocus(&'static [Style]),
+	OnScreen(Screen, &'static [Style]),
+	Noop(&'static str),
+	NoopGroup(&'static str, &'static [Style]),
 }
 
 impl Style {
@@ -115,17 +174,133 @@ impl Style {
 			Style::Height(size) => {
 				attributes.insert(key_base + "height", size.get_css());
 			}
-			Style::Bg(color) => color.apply_css(theme, key_base + "background", attributes),
-			Style::TextColor(color) => color.apply_css(theme, key_base + "color", attributes),
-			Style::TextSize(size) => {
-				attributes.insert(key_base + "font-size", size.get_css());
+			Style::Size(size) => {
+				attributes.insert(key_base.clone() + "width", size.get_css());
+				attributes.insert(key_base + "height", size.get_css());
+			}
+
+			Style::Padding(size) => {
+				attributes.insert(key_base + "padding", size.get_css());
+			}
+			Style::PaddingLeft(size) => {
+				attributes.insert(key_base + "padding-left", size.get_css());
+			}
+			Style::PaddingRight(size) => {
+				attributes.insert(key_base + "padding-right", size.get_css());
+			}
+			Style::PaddingTop(size) => {
+				attributes.insert(key_base + "padding-top", size.get_css());
+			}
+			Style::PaddingBottom(size) => {
+				attributes.insert(key_base + "padding-bottom", size.get_css());
+			}
+			Style::PaddingX(size) => {
+				attributes.insert(key_base.clone() + "padding-right", size.get_css());
+				attributes.insert(key_base + "padding-left", size.get_css());
+			}
+			Style::PaddingY(size) => {
+				attributes.insert(key_base.clone() + "padding-top", size.get_css());
+				attributes.insert(key_base + "padding-bottom", size.get_css());
+			}
+
+			Style::Margin(size) => {
+				attributes.insert(key_base + "margin", size.get_css());
+			}
+			Style::MarginLeft(size) => {
+				attributes.insert(key_base + "margin-left", size.get_css());
+			}
+			Style::MarginRight(size) => {
+				attributes.insert(key_base + "margin-right", size.get_css());
+			}
+			Style::MarginTop(size) => {
+				attributes.insert(key_base + "margin-top", size.get_css());
+			}
+			Style::MarginBottom(size) => {
+				attributes.insert(key_base + "margin-bottom", size.get_css());
+			}
+			Style::MarginX(size) => {
+				attributes.insert(key_base.clone() + "margin-right", size.get_css());
+				attributes.insert(key_base + "margin-left", size.get_css());
+			}
+			Style::MarginY(size) => {
+				attributes.insert(key_base.clone() + "margin-top", size.get_css());
+				attributes.insert(key_base + "margin-bottom", size.get_css());
+			}
+
+			Style::SpaceX(size) => {
+				attributes.insert(key_base.clone() + "*:margin-left", size.get_css());
+				attributes.insert(key_base + "*:margin-right", size.get_css());
+			}
+			Style::SpaceY(size) => {
+				attributes.insert(key_base.clone() + "*:margin-top", size.get_css());
+				attributes.insert(key_base + "*:margin-bottom", size.get_css());
+			}
+
+			Style::Flex => {
+				attributes.insert(key_base + "display", "flex".into());
 			}
 			Style::InlineFlex => {
 				attributes.insert(key_base + "display", "inline-flex".into());
 			}
-			Style::Flex => {
-				attributes.insert(key_base + "display", "flex".into());
+			Style::JustifyBetween => {
+				attributes.insert(key_base + "justify-content", "between".into());
 			}
+			Style::JustifyCenter => {
+				attributes.insert(key_base + "justify-content", "center".into());
+			}
+			Style::ItemsCenter => {
+				attributes.insert(key_base + "align-items", "center".into());
+			}
+
+			Style::InlineBlock => {
+				attributes.insert(key_base + "display", "inline-block".into());
+			}
+			Style::Block => {
+				attributes.insert(key_base + "display", "block".into());
+			}
+
+			Style::Rounded(size) => {
+				attributes.insert(key_base + "border-radius", size.get_css());
+			}
+
+			Style::Color(color) => color.apply_css(theme, key_base + "background-color", attributes),
+			Style::TextColor(color) => color.apply_css(theme, key_base + "color", attributes),
+
+			Style::TextSize(size) => {
+				attributes.insert(key_base + "font-size", size.get_css());
+			}
+			Style::FontSemibold => {
+				attributes.insert(key_base + "font-weight", "semibold".into());
+			}
+			Style::FontBold => {
+				attributes.insert(key_base + "font-weight", "bold".into());
+			}
+			Style::FontLight => {
+				attributes.insert(key_base + "font-weight", "light".into());
+			}
+
+			Style::OnHover(styles) => {
+				for style in *styles {
+					style.apply_css(theme, key_base.clone() + "hover:", attributes)
+				}
+			}
+			Style::OnActive(styles) => {
+				for style in *styles {
+					style.apply_css(theme, key_base.clone() + "active:", attributes)
+				}
+			}
+			Style::OnFocus(styles) => {
+				for style in *styles {
+					style.apply_css(theme, key_base.clone() + "focus:", attributes)
+				}
+			}
+			Style::OnScreen(screen, styles) => {
+				for style in *styles {
+					style.apply_css(theme, format!("screen-{}:", screen.get_size()) + &key_base, attributes)
+				}
+			}
+			Style::Noop(_) => {}
+			Style::NoopGroup(_, _) => {}
 		};
 	}
 }

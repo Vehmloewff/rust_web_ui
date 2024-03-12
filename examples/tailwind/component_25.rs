@@ -14,130 +14,130 @@ impl Widget<'_> for Example25 {
 	type Props = Example25Props;
 
 	fn render(mut ctx: Ctx<'_>, props: Example25Props) {
-		ctx.styles(&[NoStyle::Noop("")]);
+		ctx.styles(&[Style::Noop("")]);
 		ctx.set_attribute("style", "");
 		
-		ctx.child("1", Dynamic).run("div", |props| {
-			props.styles(&[NoStyle::Noop("relative"), NoStyle::Noop("overflow-hidden"), NoStyle::Noop("bg-white")]);
+		ctx.child("1", Dynamic).run("div", |mut props| {
+			props.styles(&[Style::Noop("relative"), Style::Noop("overflow-hidden"), Style::Noop("bg-white")]);
 			
-			props.child("1", Dynamic).run("div", |props| {
-				props.styles(&[Style::PaddingBottom(320), Style::PaddingTop(64), Screen::Small(&[Style::PaddingBottom(160)]), Screen::Small(&[Style::PaddingTop(96)]), Screen::Large(&[Style::PaddingBottom(192)]), Screen::Large(&[Style::PaddingTop(160)])]);
+			props.child("1", Dynamic).run("div", |mut props| {
+				props.styles(&[Style::PaddingBottom(Size::Exact(320)), Style::PaddingTop(Size::Exact(64)), Style::OnScreen(Screen::Small, &[Style::PaddingBottom(Size::Exact(160))]), Style::OnScreen(Screen::Small, &[Style::PaddingTop(Size::Exact(96))]), Style::OnScreen(Screen::Large, &[Style::PaddingBottom(Size::Exact(192))]), Style::OnScreen(Screen::Large, &[Style::PaddingTop(Size::Exact(160))])]);
 				
-				props.child("1", Dynamic).run("div", |props| {
-					props.styles(&[NoStyle::Noop("relative"), NoStyle::Noop("mx-auto"), NoStyle::Noop("max-w-7xl"), Style::PaddingX(16), Screen::Small(&[NoStyle::Noop("static")]), Screen::Small(&[Style::PaddingX(24)]), Screen::Large(&[Style::PaddingX(32)])]);
+				props.child("1", Dynamic).run("div", |mut props| {
+					props.styles(&[Style::Noop("relative"), Style::Noop("mx-auto"), Style::Noop("max-w-7xl"), Style::PaddingX(Size::Exact(16)), Style::OnScreen(Screen::Small, &[Style::Noop("static")]), Style::OnScreen(Screen::Small, &[Style::PaddingX(Size::Exact(24))]), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(32))])]);
 					
-					props.child("1", Dynamic).run("div", |props| {
-						props.styles(&[Screen::Small(&[NoStyle::Noop("max-w-lg")])]);
+					props.child("1", Dynamic).run("div", |mut props| {
+						props.styles(&[Style::OnScreen(Screen::Small, &[Style::Noop("max-w-lg")])]);
 						
-						props.child("1", Dynamic).run("h1", |props| {
-							props.styles(&[NoStyle::Noop("text-4xl"), Style::FontBold, NoStyle::Noop("tracking-tight"), Style::TextColor(Color::Fg(100)), Screen::Small(&[NoStyle::Noop("text-6xl")])]);
+						props.child("1", Dynamic).run("h1", |mut props| {
+							props.styles(&[Style::Noop("text-4xl"), Style::FontBold, Style::Noop("tracking-tight"), Style::TextColor(Color::Fg(100)), Style::OnScreen(Screen::Small, &[Style::Noop("text-6xl")])]);
 							
-							props.child("0", Label).run(|props| props.set_text("Summer styles are finally here"));
+							props.child("0", Label).run(|props| props.text("Summer styles are finally here"));
 						});
-						props.child("3", Dynamic).run("p", |props| {
-							props.styles(&[Style::MarginTop(16), NoStyle::Noop("text-xl"), Style::TextColor(Color::Fg(56))]);
+						props.child("3", Dynamic).run("p", |mut props| {
+							props.styles(&[Style::MarginTop(Size::Exact(16)), Style::Noop("text-xl"), Style::TextColor(Color::Fg(56))]);
 							
-							props.child("0", Label).run(|props| props.set_text("This year, our new summer collection will shelter you from the harsh elements of a world that doesn't care if you live or die."));
+							props.child("0", Label).run(|props| props.text("This year, our new summer collection will shelter you from the harsh elements of a world that doesn't care if you live or die."));
 						});
 					});
-					props.child("3", Dynamic).run("div", |props| {
-						props.child("1", Dynamic).run("div", |props| {
-							props.styles(&[Style::MarginTop(40)]);
+					props.child("3", Dynamic).run("div", |mut props| {
+						props.child("1", Dynamic).run("div", |mut props| {
+							props.styles(&[Style::MarginTop(Size::Exact(40))]);
 							
 							//  Decorative image grid 
-							props.child("3", Dynamic).run("div", |props| {
+							props.child("3", Dynamic).run("div", |mut props| {
 								props.set_attribute("aria-hidden", "true");
-								props.styles(&[NoStyle::Noop("pointer-events-none"), Screen::Large(&[NoStyle::Noop("absolute")]), Screen::Large(&[NoStyle::Noop("inset-y-0")]), Screen::Large(&[NoStyle::Noop("mx-auto")]), Screen::Large(&[NoStyle::Noop("w-full")]), Screen::Large(&[NoStyle::Noop("max-w-7xl")])]);
+								props.styles(&[Style::Noop("pointer-events-none"), Style::OnScreen(Screen::Large, &[Style::Noop("absolute")]), Style::OnScreen(Screen::Large, &[Style::Noop("inset-y-0")]), Style::OnScreen(Screen::Large, &[Style::Noop("mx-auto")]), Style::OnScreen(Screen::Large, &[Style::Width(Size::Full)]), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-7xl")])]);
 								
-								props.child("1", Dynamic).run("div", |props| {
-									props.styles(&[NoStyle::Noop("absolute"), NoStyle::Noop("transform"), Screen::Small(&[NoStyle::Noop("left-1/2")]), Screen::Small(&[NoStyle::Noop("top-0")]), Screen::Small(&[NoStyle::Noop("translate-x-8")]), Screen::Large(&[NoStyle::Noop("left-1/2")]), Screen::Large(&[NoStyle::Noop("top-1/2")]), Screen::Large(&[NoStyle::Noop("-translate-y-1/2")]), Screen::Large(&[NoStyle::Noop("translate-x-8")])]);
+								props.child("1", Dynamic).run("div", |mut props| {
+									props.styles(&[Style::Noop("absolute"), Style::Noop("transform"), Style::OnScreen(Screen::Small, &[Style::Noop("left-1/2")]), Style::OnScreen(Screen::Small, &[Style::Noop("top-0")]), Style::OnScreen(Screen::Small, &[Style::Noop("translate-x-8")]), Style::OnScreen(Screen::Large, &[Style::Noop("left-1/2")]), Style::OnScreen(Screen::Large, &[Style::Noop("top-1/2")]), Style::OnScreen(Screen::Large, &[Style::Noop("-translate-y-1/2")]), Style::OnScreen(Screen::Large, &[Style::Noop("translate-x-8")])]);
 									
-									props.child("1", Dynamic).run("div", |props| {
-										props.styles(&[Style::Flex, Style::ItemsCenter, Style::SpaceX(24), Screen::Large(&[Style::SpaceX(32)])]);
+									props.child("1", Dynamic).run("div", |mut props| {
+										props.styles(&[Style::Flex, Style::ItemsCenter, Style::SpaceX(Size::Exact(24)), Style::OnScreen(Screen::Large, &[Style::SpaceX(Size::Exact(32))])]);
 										
-										props.child("1", Dynamic).run("div", |props| {
-											props.styles(&[NoStyle::Noop("grid"), NoStyle::Noop("flex-shrink-0"), NoStyle::Noop("grid-cols-1"), NoStyle::Noop("gap-y-6"), Screen::Large(&[NoStyle::Noop("gap-y-8")])]);
+										props.child("1", Dynamic).run("div", |mut props| {
+											props.styles(&[Style::Noop("grid"), Style::Noop("flex-shrink-0"), Style::Noop("grid-cols-1"), Style::Noop("gap-y-6"), Style::OnScreen(Screen::Large, &[Style::Noop("gap-y-8")])]);
 											
-											props.child("1", Dynamic).run("div", |props| {
-												props.styles(&[Style::Width(256), Style::Width(176), NoStyle::Noop("overflow-hidden"), NoStyle::Noop("rounded-lg"), Screen::Small(&[NoStyle::Noop("opacity-0")]), Screen::Large(&[NoStyle::Noop("opacity-100")])]);
+											props.child("1", Dynamic).run("div", |mut props| {
+												props.styles(&[Style::Width(Size::Exact(256)), Style::Width(Size::Exact(176)), Style::Noop("overflow-hidden"), Style::Noop("rounded-lg"), Style::OnScreen(Screen::Small, &[Style::Noop("opacity-0")]), Style::OnScreen(Screen::Large, &[Style::Noop("opacity-100")])]);
 												
-												props.child("1", Dynamic).run("img", |props| {
+												props.child("1", Dynamic).run("img", |mut props| {
 													props.set_attribute("src", "https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-01.jpg");
 													props.set_attribute("alt", "");
-													props.styles(&[NoStyle::Noop("h-full"), NoStyle::Noop("w-full"), NoStyle::Noop("object-cover"), NoStyle::Noop("object-center")]);
+													props.styles(&[Style::Width(Size::Full), Style::Width(Size::Full), Style::Noop("object-cover"), Style::Noop("object-center")]);
 												});
 											});
-											props.child("3", Dynamic).run("div", |props| {
-												props.styles(&[Style::Width(256), Style::Width(176), NoStyle::Noop("overflow-hidden"), NoStyle::Noop("rounded-lg")]);
+											props.child("3", Dynamic).run("div", |mut props| {
+												props.styles(&[Style::Width(Size::Exact(256)), Style::Width(Size::Exact(176)), Style::Noop("overflow-hidden"), Style::Noop("rounded-lg")]);
 												
-												props.child("1", Dynamic).run("img", |props| {
+												props.child("1", Dynamic).run("img", |mut props| {
 													props.set_attribute("src", "https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-02.jpg");
 													props.set_attribute("alt", "");
-													props.styles(&[NoStyle::Noop("h-full"), NoStyle::Noop("w-full"), NoStyle::Noop("object-cover"), NoStyle::Noop("object-center")]);
+													props.styles(&[Style::Width(Size::Full), Style::Width(Size::Full), Style::Noop("object-cover"), Style::Noop("object-center")]);
 												});
 											});
 										});
-										props.child("3", Dynamic).run("div", |props| {
-											props.styles(&[NoStyle::Noop("grid"), NoStyle::Noop("flex-shrink-0"), NoStyle::Noop("grid-cols-1"), NoStyle::Noop("gap-y-6"), Screen::Large(&[NoStyle::Noop("gap-y-8")])]);
+										props.child("3", Dynamic).run("div", |mut props| {
+											props.styles(&[Style::Noop("grid"), Style::Noop("flex-shrink-0"), Style::Noop("grid-cols-1"), Style::Noop("gap-y-6"), Style::OnScreen(Screen::Large, &[Style::Noop("gap-y-8")])]);
 											
-											props.child("1", Dynamic).run("div", |props| {
-												props.styles(&[Style::Width(256), Style::Width(176), NoStyle::Noop("overflow-hidden"), NoStyle::Noop("rounded-lg")]);
+											props.child("1", Dynamic).run("div", |mut props| {
+												props.styles(&[Style::Width(Size::Exact(256)), Style::Width(Size::Exact(176)), Style::Noop("overflow-hidden"), Style::Noop("rounded-lg")]);
 												
-												props.child("1", Dynamic).run("img", |props| {
+												props.child("1", Dynamic).run("img", |mut props| {
 													props.set_attribute("src", "https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-03.jpg");
 													props.set_attribute("alt", "");
-													props.styles(&[NoStyle::Noop("h-full"), NoStyle::Noop("w-full"), NoStyle::Noop("object-cover"), NoStyle::Noop("object-center")]);
+													props.styles(&[Style::Width(Size::Full), Style::Width(Size::Full), Style::Noop("object-cover"), Style::Noop("object-center")]);
 												});
 											});
-											props.child("3", Dynamic).run("div", |props| {
-												props.styles(&[Style::Width(256), Style::Width(176), NoStyle::Noop("overflow-hidden"), NoStyle::Noop("rounded-lg")]);
+											props.child("3", Dynamic).run("div", |mut props| {
+												props.styles(&[Style::Width(Size::Exact(256)), Style::Width(Size::Exact(176)), Style::Noop("overflow-hidden"), Style::Noop("rounded-lg")]);
 												
-												props.child("1", Dynamic).run("img", |props| {
+												props.child("1", Dynamic).run("img", |mut props| {
 													props.set_attribute("src", "https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-04.jpg");
 													props.set_attribute("alt", "");
-													props.styles(&[NoStyle::Noop("h-full"), NoStyle::Noop("w-full"), NoStyle::Noop("object-cover"), NoStyle::Noop("object-center")]);
+													props.styles(&[Style::Width(Size::Full), Style::Width(Size::Full), Style::Noop("object-cover"), Style::Noop("object-center")]);
 												});
 											});
-											props.child("5", Dynamic).run("div", |props| {
-												props.styles(&[Style::Width(256), Style::Width(176), NoStyle::Noop("overflow-hidden"), NoStyle::Noop("rounded-lg")]);
+											props.child("5", Dynamic).run("div", |mut props| {
+												props.styles(&[Style::Width(Size::Exact(256)), Style::Width(Size::Exact(176)), Style::Noop("overflow-hidden"), Style::Noop("rounded-lg")]);
 												
-												props.child("1", Dynamic).run("img", |props| {
+												props.child("1", Dynamic).run("img", |mut props| {
 													props.set_attribute("src", "https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-05.jpg");
 													props.set_attribute("alt", "");
-													props.styles(&[NoStyle::Noop("h-full"), NoStyle::Noop("w-full"), NoStyle::Noop("object-cover"), NoStyle::Noop("object-center")]);
+													props.styles(&[Style::Width(Size::Full), Style::Width(Size::Full), Style::Noop("object-cover"), Style::Noop("object-center")]);
 												});
 											});
 										});
-										props.child("5", Dynamic).run("div", |props| {
-											props.styles(&[NoStyle::Noop("grid"), NoStyle::Noop("flex-shrink-0"), NoStyle::Noop("grid-cols-1"), NoStyle::Noop("gap-y-6"), Screen::Large(&[NoStyle::Noop("gap-y-8")])]);
+										props.child("5", Dynamic).run("div", |mut props| {
+											props.styles(&[Style::Noop("grid"), Style::Noop("flex-shrink-0"), Style::Noop("grid-cols-1"), Style::Noop("gap-y-6"), Style::OnScreen(Screen::Large, &[Style::Noop("gap-y-8")])]);
 											
-											props.child("1", Dynamic).run("div", |props| {
-												props.styles(&[Style::Width(256), Style::Width(176), NoStyle::Noop("overflow-hidden"), NoStyle::Noop("rounded-lg")]);
+											props.child("1", Dynamic).run("div", |mut props| {
+												props.styles(&[Style::Width(Size::Exact(256)), Style::Width(Size::Exact(176)), Style::Noop("overflow-hidden"), Style::Noop("rounded-lg")]);
 												
-												props.child("1", Dynamic).run("img", |props| {
+												props.child("1", Dynamic).run("img", |mut props| {
 													props.set_attribute("src", "https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-06.jpg");
 													props.set_attribute("alt", "");
-													props.styles(&[NoStyle::Noop("h-full"), NoStyle::Noop("w-full"), NoStyle::Noop("object-cover"), NoStyle::Noop("object-center")]);
+													props.styles(&[Style::Width(Size::Full), Style::Width(Size::Full), Style::Noop("object-cover"), Style::Noop("object-center")]);
 												});
 											});
-											props.child("3", Dynamic).run("div", |props| {
-												props.styles(&[Style::Width(256), Style::Width(176), NoStyle::Noop("overflow-hidden"), NoStyle::Noop("rounded-lg")]);
+											props.child("3", Dynamic).run("div", |mut props| {
+												props.styles(&[Style::Width(Size::Exact(256)), Style::Width(Size::Exact(176)), Style::Noop("overflow-hidden"), Style::Noop("rounded-lg")]);
 												
-												props.child("1", Dynamic).run("img", |props| {
+												props.child("1", Dynamic).run("img", |mut props| {
 													props.set_attribute("src", "https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-07.jpg");
 													props.set_attribute("alt", "");
-													props.styles(&[NoStyle::Noop("h-full"), NoStyle::Noop("w-full"), NoStyle::Noop("object-cover"), NoStyle::Noop("object-center")]);
+													props.styles(&[Style::Width(Size::Full), Style::Width(Size::Full), Style::Noop("object-cover"), Style::Noop("object-center")]);
 												});
 											});
 										});
 									});
 								});
 							});
-							props.child("5", Dynamic).run("a", |props| {
+							props.child("5", Dynamic).run("a", |mut props| {
 								props.set_attribute("href", "#");
-								props.styles(&[Style::InlineBlock, NoStyle::Noop("rounded-md"), NoStyle::Noop("border"), NoStyle::Noop("border-transparent"), NoStyle::Noop("bg-indigo-600"), Style::PaddingX(32), Style::PaddingY(12), NoStyle::Noop("text-center"), NoStyle::Noop("font-medium"), NoStyle::Noop("text-white"), Action::Hover(&[NoStyle::Noop("bg-indigo-700")])]);
+								props.styles(&[Style::InlineBlock, Style::Noop("rounded-md"), Style::Noop("border"), Style::Noop("border-transparent"), Style::Noop("bg-indigo-600"), Style::PaddingX(Size::Exact(32)), Style::PaddingY(Size::Exact(12)), Style::Noop("text-center"), Style::Noop("font-medium"), Style::Noop("text-white"), Style::OnHover(&[Style::Noop("bg-indigo-700")])]);
 								
-								props.child("0", Label).run(|props| props.set_text("Shop Collection"));
+								props.child("0", Label).run(|props| props.text("Shop Collection"));
 							});
 						});
 					});

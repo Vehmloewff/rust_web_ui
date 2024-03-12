@@ -136,7 +136,7 @@ function buildNode(element: Element, handle: string): string {
 			const text = child.textContent.trim()
 			if (!text.length) continue
 
-			inner.push(`${handle}.child("${childIndex}", Label).run(|props| props.set_text(${quote(text)}));`)
+			inner.push(`${handle}.child("${childIndex}", Label).run(|props| props.text(${quote(text)}));`)
 
 			continue
 		}
@@ -146,9 +146,9 @@ function buildNode(element: Element, handle: string): string {
 			const tag = element.tagName === 'BODY' ? 'div' : element.tagName.toLowerCase()
 
 			if (tag === 'svg') {
-				inner.push(`${handle}.child("${childIndex}", Icon).run(|props| {\n${indent(buildIcon(element, 'props'))}\n});`)
+				inner.push(`${handle}.child("${childIndex}", Icon).run(|mut props| {\n${indent(buildIcon(element, 'props'))}\n});`)
 			} else {
-				inner.push(`${handle}.child("${childIndex}", Dynamic).run("${tag}", |props| {\n${indent(buildNode(element, 'props'))}\n});`)
+				inner.push(`${handle}.child("${childIndex}", Dynamic).run("${tag}", |mut props| {\n${indent(buildNode(element, 'props'))}\n});`)
 			}
 
 			continue
@@ -293,10 +293,12 @@ function is(value: string) {
 }
 
 function size(part: string) {
+	if (part === 'full') return `Size::Full`
+
 	const float = parseFloat(part)
 	if (isNaN(float)) return null
 
-	return Math.round(float * 4).toString()
+	return `Size::Exact(${Math.round(float * 4)})`
 }
 
 function shade(part: string) {
@@ -330,21 +332,21 @@ function first(parts: string[], items: (string | null)[]) {
 		if (item !== null) return item
 	}
 
-	return `NoStyle::Noop("${parts.join('-')}")`
+	return `Style::Noop("${parts.join('-')}")`
 }
 
 function convertModifier(name: string, body: string) {
 	if (name === 'dark') return body
 
-	if (name === 'hover') return `Action::Hover(&[${body}])`
-	if (name === 'active') return `Action::Hover(&[${body}])`
-	if (name === 'focus') return `Action::Hover(&[${body}])`
+	if (name === 'hover') return `Style::OnHover(&[${body}])`
+	if (name === 'active') return `Style::OnActive(&[${body}])`
+	if (name === 'focus') return `Style::OnFocus(&[${body}])`
 
-	if (name === 'sm') return `Screen::Small(&[${body}])`
-	if (name === 'md') return `Screen::Medium(&[${body}])`
-	if (name === 'lg') return `Screen::Large(&[${body}])`
-	if (name === 'xl') return `Screen::ExtraLarge(1, &[${body}])`
-	if (/^(\d)xl$/.test(name)) return `Screen::Medium(${name.slice(0, 1)}, &[${body}])`
+	if (name === 'sm') return `Style::OnScreen(Screen::Small, &[${body}])`
+	if (name === 'md') return `Style::OnScreen(Screen::Medium, &[${body}])`
+	if (name === 'lg') return `Style::OnScreen(Screen::Large, &[${body}])`
+	if (name === 'xl') return `Style::OnScreen(Screen::ExtraLarge(1), &[${body}])`
+	if (/^(\d)xl$/.test(name)) return `Style::Screen(Screen::ExtraLarge(${name.slice(0, 1)}), &[${body}])`
 
-	return `NoStyle::NoopGroup("${name}", ${body})`
+	return `Style::NoopGroup("${name}", &[${body}])`
 }

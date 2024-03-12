@@ -14,11 +14,11 @@ impl Widget<'_> for Example37 {
 	type Props = Example37Props;
 
 	fn render(mut ctx: Ctx<'_>, props: Example37Props) {
-		ctx.styles(&[NoStyle::Noop("")]);
+		ctx.styles(&[Style::Noop("")]);
 		ctx.set_attribute("style", "");
 		
-		ctx.child("1", Dynamic).run("div", |props| {
-			props.styles(&[Style::Width(0), NoStyle::Noop("min-h-[768px]"), NoStyle::Noop("bg-white")]);
+		ctx.child("1", Dynamic).run("div", |mut props| {
+			props.styles(&[Style::Width(Size::Exact(0)), Style::Noop("min-h-[768px]"), Style::Noop("bg-white")]);
 			
 			// 
 			//   This example requires updating your template:
@@ -28,45 +28,45 @@ impl Widget<'_> for Example37 {
 			//   <body class="h-full">
 			//   ```
 			//   
-			props.child("3", Dynamic).run("main", |props| {
-				props.styles(&[NoStyle::Noop("grid"), NoStyle::Noop("min-h-full"), NoStyle::Noop("place-items-center"), NoStyle::Noop("bg-white"), Style::PaddingX(24), Style::PaddingY(96), Screen::Small(&[Style::PaddingY(128)]), Screen::Large(&[Style::PaddingX(32)])]);
+			props.child("3", Dynamic).run("main", |mut props| {
+				props.styles(&[Style::Noop("grid"), Style::Noop("min-h-full"), Style::Noop("place-items-center"), Style::Noop("bg-white"), Style::PaddingX(Size::Exact(24)), Style::PaddingY(Size::Exact(96)), Style::OnScreen(Screen::Small, &[Style::PaddingY(Size::Exact(128))]), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(32))])]);
 				
-				props.child("1", Dynamic).run("div", |props| {
-					props.styles(&[NoStyle::Noop("text-center")]);
+				props.child("1", Dynamic).run("div", |mut props| {
+					props.styles(&[Style::Noop("text-center")]);
 					
-					props.child("1", Dynamic).run("p", |props| {
-						props.styles(&[NoStyle::Noop("text-base"), Style::FontSemibold, NoStyle::Noop("text-indigo-600")]);
+					props.child("1", Dynamic).run("p", |mut props| {
+						props.styles(&[Style::Noop("text-base"), Style::FontSemibold, Style::Noop("text-indigo-600")]);
 						
-						props.child("0", Label).run(|props| props.set_text("404"));
+						props.child("0", Label).run(|props| props.text("404"));
 					});
-					props.child("3", Dynamic).run("h1", |props| {
-						props.styles(&[Style::MarginTop(16), NoStyle::Noop("text-3xl"), Style::FontBold, NoStyle::Noop("tracking-tight"), Style::TextColor(Color::Fg(100)), Screen::Small(&[NoStyle::Noop("text-5xl")])]);
+					props.child("3", Dynamic).run("h1", |mut props| {
+						props.styles(&[Style::MarginTop(Size::Exact(16)), Style::Noop("text-3xl"), Style::FontBold, Style::Noop("tracking-tight"), Style::TextColor(Color::Fg(100)), Style::OnScreen(Screen::Small, &[Style::Noop("text-5xl")])]);
 						
-						props.child("0", Label).run(|props| props.set_text("Page not found"));
+						props.child("0", Label).run(|props| props.text("Page not found"));
 					});
-					props.child("5", Dynamic).run("p", |props| {
-						props.styles(&[Style::MarginTop(24), NoStyle::Noop("text-base"), NoStyle::Noop("leading-7"), Style::TextColor(Color::Fg(67))]);
+					props.child("5", Dynamic).run("p", |mut props| {
+						props.styles(&[Style::MarginTop(Size::Exact(24)), Style::Noop("text-base"), Style::Noop("leading-7"), Style::TextColor(Color::Fg(67))]);
 						
-						props.child("0", Label).run(|props| props.set_text("Sorry, we couldn’t find the page you’re looking for."));
+						props.child("0", Label).run(|props| props.text("Sorry, we couldn’t find the page you’re looking for."));
 					});
-					props.child("7", Dynamic).run("div", |props| {
-						props.styles(&[Style::MarginTop(40), Style::Flex, Style::ItemsCenter, Style::JustifyCenter, NoStyle::Noop("gap-x-6")]);
+					props.child("7", Dynamic).run("div", |mut props| {
+						props.styles(&[Style::MarginTop(Size::Exact(40)), Style::Flex, Style::ItemsCenter, Style::JustifyCenter, Style::Noop("gap-x-6")]);
 						
-						props.child("1", Dynamic).run("a", |props| {
+						props.child("1", Dynamic).run("a", |mut props| {
 							props.set_attribute("href", "#");
-							props.styles(&[NoStyle::Noop("rounded-md"), NoStyle::Noop("bg-indigo-600"), Style::PaddingX(14), Style::PaddingY(10), NoStyle::Noop("text-sm"), Style::FontSemibold, NoStyle::Noop("text-white"), NoStyle::Noop("shadow-sm"), Action::Hover(&[NoStyle::Noop("bg-indigo-500")]), NoStyle::NoopGroup("focus-visible", NoStyle::Noop("outline")), NoStyle::NoopGroup("focus-visible", NoStyle::Noop("outline-2")), NoStyle::NoopGroup("focus-visible", NoStyle::Noop("outline-offset-2")), NoStyle::NoopGroup("focus-visible", NoStyle::Noop("outline-indigo-600"))]);
+							props.styles(&[Style::Noop("rounded-md"), Style::Noop("bg-indigo-600"), Style::PaddingX(Size::Exact(14)), Style::PaddingY(Size::Exact(10)), Style::Noop("text-sm"), Style::FontSemibold, Style::Noop("text-white"), Style::Noop("shadow-sm"), Style::OnHover(&[Style::Noop("bg-indigo-500")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-2")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-offset-2")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-indigo-600")])]);
 							
-							props.child("0", Label).run(|props| props.set_text("Go back home"));
+							props.child("0", Label).run(|props| props.text("Go back home"));
 						});
-						props.child("3", Dynamic).run("a", |props| {
+						props.child("3", Dynamic).run("a", |mut props| {
 							props.set_attribute("href", "#");
-							props.styles(&[NoStyle::Noop("text-sm"), Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
+							props.styles(&[Style::Noop("text-sm"), Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
 							
-							props.child("0", Label).run(|props| props.set_text("Contact support"));
-							props.child("1", Dynamic).run("span", |props| {
+							props.child("0", Label).run(|props| props.text("Contact support"));
+							props.child("1", Dynamic).run("span", |mut props| {
 								props.set_attribute("aria-hidden", "true");
 								
-								props.child("0", Label).run(|props| props.set_text("→"));
+								props.child("0", Label).run(|props| props.text("→"));
 							});
 						});
 					});

@@ -14,11 +14,11 @@ impl Widget<'_> for Example0 {
 	type Props = Example0Props;
 
 	fn render(mut ctx: Ctx<'_>, props: Example0Props) {
-		ctx.styles(&[NoStyle::Noop("")]);
+		ctx.styles(&[Style::Noop("")]);
 		ctx.set_attribute("style", "");
 		
-		ctx.child("1", Dynamic).run("div", |props| {
-			props.styles(&[Style::Flex, NoStyle::Noop("min-h-[840px]"), NoStyle::Noop("flex-col"), NoStyle::Noop("bg-white")]);
+		ctx.child("1", Dynamic).run("div", |mut props| {
+			props.styles(&[Style::Flex, Style::Noop("min-h-[840px]"), Style::Noop("flex-col"), Style::Noop("bg-white")]);
 			
 			// 
 			//   This example requires updating your template:
@@ -28,104 +28,104 @@ impl Widget<'_> for Example0 {
 			//   <body class="h-full">
 			//   ```
 			//   
-			props.child("3", Dynamic).run("div", |props| {
-				props.styles(&[Style::Flex, NoStyle::Noop("min-h-full"), NoStyle::Noop("flex-1"), NoStyle::Noop("flex-col"), Style::JustifyCenter, Style::PaddingX(24), Style::PaddingY(48), Screen::Large(&[Style::PaddingX(32)])]);
+			props.child("3", Dynamic).run("div", |mut props| {
+				props.styles(&[Style::Flex, Style::Noop("min-h-full"), Style::Noop("flex-1"), Style::Noop("flex-col"), Style::JustifyCenter, Style::PaddingX(Size::Exact(24)), Style::PaddingY(Size::Exact(48)), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(32))])]);
 				
-				props.child("1", Dynamic).run("div", |props| {
-					props.styles(&[Screen::Small(&[NoStyle::Noop("mx-auto")]), Screen::Small(&[NoStyle::Noop("w-full")]), Screen::Small(&[NoStyle::Noop("max-w-sm")])]);
+				props.child("1", Dynamic).run("div", |mut props| {
+					props.styles(&[Style::OnScreen(Screen::Small, &[Style::Noop("mx-auto")]), Style::OnScreen(Screen::Small, &[Style::Width(Size::Full)]), Style::OnScreen(Screen::Small, &[Style::Noop("max-w-sm")])]);
 					
-					props.child("1", Dynamic).run("img", |props| {
-						props.styles(&[NoStyle::Noop("mx-auto"), Style::Width(40), NoStyle::Noop("w-auto")]);
+					props.child("1", Dynamic).run("img", |mut props| {
+						props.styles(&[Style::Noop("mx-auto"), Style::Width(Size::Exact(40)), Style::Noop("w-auto")]);
 						props.set_attribute("src", "https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600");
 						props.set_attribute("alt", "Your Company");
 					});
-					props.child("3", Dynamic).run("h2", |props| {
-						props.styles(&[Style::MarginTop(40), NoStyle::Noop("text-center"), NoStyle::Noop("text-2xl"), Style::FontBold, NoStyle::Noop("leading-9"), NoStyle::Noop("tracking-tight"), Style::TextColor(Color::Fg(100))]);
+					props.child("3", Dynamic).run("h2", |mut props| {
+						props.styles(&[Style::MarginTop(Size::Exact(40)), Style::Noop("text-center"), Style::Noop("text-2xl"), Style::FontBold, Style::Noop("leading-9"), Style::Noop("tracking-tight"), Style::TextColor(Color::Fg(100))]);
 						
-						props.child("0", Label).run(|props| props.set_text("Sign in to your account"));
+						props.child("0", Label).run(|props| props.text("Sign in to your account"));
 					});
 				});
-				props.child("3", Dynamic).run("div", |props| {
-					props.styles(&[Style::MarginTop(40), Screen::Small(&[NoStyle::Noop("mx-auto")]), Screen::Small(&[NoStyle::Noop("w-full")]), Screen::Small(&[NoStyle::Noop("max-w-sm")])]);
+				props.child("3", Dynamic).run("div", |mut props| {
+					props.styles(&[Style::MarginTop(Size::Exact(40)), Style::OnScreen(Screen::Small, &[Style::Noop("mx-auto")]), Style::OnScreen(Screen::Small, &[Style::Width(Size::Full)]), Style::OnScreen(Screen::Small, &[Style::Noop("max-w-sm")])]);
 					
-					props.child("1", Dynamic).run("form", |props| {
-						props.styles(&[Style::SpaceY(24)]);
+					props.child("1", Dynamic).run("form", |mut props| {
+						props.styles(&[Style::SpaceY(Size::Exact(24))]);
 						props.set_attribute("action", "#");
 						props.set_attribute("method", "POST");
 						
-						props.child("1", Dynamic).run("div", |props| {
-							props.child("1", Dynamic).run("label", |props| {
+						props.child("1", Dynamic).run("div", |mut props| {
+							props.child("1", Dynamic).run("label", |mut props| {
 								props.set_attribute("for", "email");
-								props.styles(&[Style::Block, NoStyle::Noop("text-sm"), NoStyle::Noop("font-medium"), NoStyle::Noop("leading-6"), Style::TextColor(Color::Fg(100))]);
+								props.styles(&[Style::Block, Style::Noop("text-sm"), Style::Noop("font-medium"), Style::Noop("leading-6"), Style::TextColor(Color::Fg(100))]);
 								
-								props.child("0", Label).run(|props| props.set_text("Email address"));
+								props.child("0", Label).run(|props| props.text("Email address"));
 							});
-							props.child("3", Dynamic).run("div", |props| {
-								props.styles(&[Style::MarginTop(8)]);
+							props.child("3", Dynamic).run("div", |mut props| {
+								props.styles(&[Style::MarginTop(Size::Exact(8))]);
 								
-								props.child("1", Dynamic).run("input", |props| {
+								props.child("1", Dynamic).run("input", |mut props| {
 									props.set_attribute("id", "email");
 									props.set_attribute("name", "email");
 									props.set_attribute("type", "email");
 									props.set_attribute("autocomplete", "email");
 									props.set_attribute("required", "");
-									props.styles(&[Style::Block, NoStyle::Noop("w-full"), NoStyle::Noop("rounded-md"), NoStyle::Noop("border-0"), Style::PaddingY(6), Style::TextColor(Color::Fg(100)), NoStyle::Noop("shadow-sm"), NoStyle::Noop("ring-1"), NoStyle::Noop("ring-inset"), NoStyle::Noop("ring-gray-300"), NoStyle::NoopGroup("placeholder", Style::TextColor(Color::Fg(44))), Action::Hover(&[NoStyle::Noop("ring-2")]), Action::Hover(&[NoStyle::Noop("ring-inset")]), Action::Hover(&[NoStyle::Noop("ring-indigo-600")]), Screen::Small(&[NoStyle::Noop("text-sm")]), Screen::Small(&[NoStyle::Noop("leading-6")])]);
+									props.styles(&[Style::Block, Style::Width(Size::Full), Style::Noop("rounded-md"), Style::Noop("border-0"), Style::PaddingY(Size::Exact(6)), Style::TextColor(Color::Fg(100)), Style::Noop("shadow-sm"), Style::Noop("ring-1"), Style::Noop("ring-inset"), Style::Noop("ring-gray-300"), Style::NoopGroup("placeholder", &[Style::TextColor(Color::Fg(44))]), Style::OnFocus(&[Style::Noop("ring-2")]), Style::OnFocus(&[Style::Noop("ring-inset")]), Style::OnFocus(&[Style::Noop("ring-indigo-600")]), Style::OnScreen(Screen::Small, &[Style::Noop("text-sm")]), Style::OnScreen(Screen::Small, &[Style::Noop("leading-6")])]);
 								});
 							});
 						});
-						props.child("3", Dynamic).run("div", |props| {
-							props.child("1", Dynamic).run("div", |props| {
+						props.child("3", Dynamic).run("div", |mut props| {
+							props.child("1", Dynamic).run("div", |mut props| {
 								props.styles(&[Style::Flex, Style::ItemsCenter, Style::JustifyBetween]);
 								
-								props.child("1", Dynamic).run("label", |props| {
+								props.child("1", Dynamic).run("label", |mut props| {
 									props.set_attribute("for", "password");
-									props.styles(&[Style::Block, NoStyle::Noop("text-sm"), NoStyle::Noop("font-medium"), NoStyle::Noop("leading-6"), Style::TextColor(Color::Fg(100))]);
+									props.styles(&[Style::Block, Style::Noop("text-sm"), Style::Noop("font-medium"), Style::Noop("leading-6"), Style::TextColor(Color::Fg(100))]);
 									
-									props.child("0", Label).run(|props| props.set_text("Password"));
+									props.child("0", Label).run(|props| props.text("Password"));
 								});
-								props.child("3", Dynamic).run("div", |props| {
-									props.styles(&[NoStyle::Noop("text-sm")]);
+								props.child("3", Dynamic).run("div", |mut props| {
+									props.styles(&[Style::Noop("text-sm")]);
 									
-									props.child("1", Dynamic).run("a", |props| {
+									props.child("1", Dynamic).run("a", |mut props| {
 										props.set_attribute("href", "#");
-										props.styles(&[Style::FontSemibold, NoStyle::Noop("text-indigo-600"), Action::Hover(&[NoStyle::Noop("text-indigo-500")])]);
+										props.styles(&[Style::FontSemibold, Style::Noop("text-indigo-600"), Style::OnHover(&[Style::Noop("text-indigo-500")])]);
 										
-										props.child("0", Label).run(|props| props.set_text("Forgot password?"));
+										props.child("0", Label).run(|props| props.text("Forgot password?"));
 									});
 								});
 							});
-							props.child("3", Dynamic).run("div", |props| {
-								props.styles(&[Style::MarginTop(8)]);
+							props.child("3", Dynamic).run("div", |mut props| {
+								props.styles(&[Style::MarginTop(Size::Exact(8))]);
 								
-								props.child("1", Dynamic).run("input", |props| {
+								props.child("1", Dynamic).run("input", |mut props| {
 									props.set_attribute("id", "password");
 									props.set_attribute("name", "password");
 									props.set_attribute("type", "password");
 									props.set_attribute("autocomplete", "current-password");
 									props.set_attribute("required", "");
-									props.styles(&[Style::Block, NoStyle::Noop("w-full"), NoStyle::Noop("rounded-md"), NoStyle::Noop("border-0"), Style::PaddingY(6), Style::TextColor(Color::Fg(100)), NoStyle::Noop("shadow-sm"), NoStyle::Noop("ring-1"), NoStyle::Noop("ring-inset"), NoStyle::Noop("ring-gray-300"), NoStyle::NoopGroup("placeholder", Style::TextColor(Color::Fg(44))), Action::Hover(&[NoStyle::Noop("ring-2")]), Action::Hover(&[NoStyle::Noop("ring-inset")]), Action::Hover(&[NoStyle::Noop("ring-indigo-600")]), Screen::Small(&[NoStyle::Noop("text-sm")]), Screen::Small(&[NoStyle::Noop("leading-6")])]);
+									props.styles(&[Style::Block, Style::Width(Size::Full), Style::Noop("rounded-md"), Style::Noop("border-0"), Style::PaddingY(Size::Exact(6)), Style::TextColor(Color::Fg(100)), Style::Noop("shadow-sm"), Style::Noop("ring-1"), Style::Noop("ring-inset"), Style::Noop("ring-gray-300"), Style::NoopGroup("placeholder", &[Style::TextColor(Color::Fg(44))]), Style::OnFocus(&[Style::Noop("ring-2")]), Style::OnFocus(&[Style::Noop("ring-inset")]), Style::OnFocus(&[Style::Noop("ring-indigo-600")]), Style::OnScreen(Screen::Small, &[Style::Noop("text-sm")]), Style::OnScreen(Screen::Small, &[Style::Noop("leading-6")])]);
 								});
 							});
 						});
-						props.child("5", Dynamic).run("div", |props| {
-							props.child("1", Dynamic).run("button", |props| {
+						props.child("5", Dynamic).run("div", |mut props| {
+							props.child("1", Dynamic).run("button", |mut props| {
 								props.set_attribute("type", "submit");
-								props.styles(&[Style::Flex, NoStyle::Noop("w-full"), Style::JustifyCenter, NoStyle::Noop("rounded-md"), NoStyle::Noop("bg-indigo-600"), Style::PaddingX(12), Style::PaddingY(6), NoStyle::Noop("text-sm"), Style::FontSemibold, NoStyle::Noop("leading-6"), NoStyle::Noop("text-white"), NoStyle::Noop("shadow-sm"), Action::Hover(&[NoStyle::Noop("bg-indigo-500")]), NoStyle::NoopGroup("focus-visible", NoStyle::Noop("outline")), NoStyle::NoopGroup("focus-visible", NoStyle::Noop("outline-2")), NoStyle::NoopGroup("focus-visible", NoStyle::Noop("outline-offset-2")), NoStyle::NoopGroup("focus-visible", NoStyle::Noop("outline-indigo-600"))]);
+								props.styles(&[Style::Flex, Style::Width(Size::Full), Style::JustifyCenter, Style::Noop("rounded-md"), Style::Noop("bg-indigo-600"), Style::PaddingX(Size::Exact(12)), Style::PaddingY(Size::Exact(6)), Style::Noop("text-sm"), Style::FontSemibold, Style::Noop("leading-6"), Style::Noop("text-white"), Style::Noop("shadow-sm"), Style::OnHover(&[Style::Noop("bg-indigo-500")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-2")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-offset-2")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-indigo-600")])]);
 								
-								props.child("0", Label).run(|props| props.set_text("Sign in"));
+								props.child("0", Label).run(|props| props.text("Sign in"));
 							});
 						});
 					});
-					props.child("3", Dynamic).run("p", |props| {
-						props.styles(&[Style::MarginTop(40), NoStyle::Noop("text-center"), NoStyle::Noop("text-sm"), Style::TextColor(Color::Fg(56))]);
+					props.child("3", Dynamic).run("p", |mut props| {
+						props.styles(&[Style::MarginTop(Size::Exact(40)), Style::Noop("text-center"), Style::Noop("text-sm"), Style::TextColor(Color::Fg(56))]);
 						
-						props.child("0", Label).run(|props| props.set_text("Not a member?"));
+						props.child("0", Label).run(|props| props.text("Not a member?"));
 						//  space 
-						props.child("3", Dynamic).run("a", |props| {
+						props.child("3", Dynamic).run("a", |mut props| {
 							props.set_attribute("href", "#");
-							props.styles(&[Style::FontSemibold, NoStyle::Noop("leading-6"), NoStyle::Noop("text-indigo-600"), Action::Hover(&[NoStyle::Noop("text-indigo-500")])]);
+							props.styles(&[Style::FontSemibold, Style::Noop("leading-6"), Style::Noop("text-indigo-600"), Style::OnHover(&[Style::Noop("text-indigo-500")])]);
 							
-							props.child("0", Label).run(|props| props.set_text("Start a 14 day free trial"));
+							props.child("0", Label).run(|props| props.text("Start a 14 day free trial"));
 						});
 					});
 				});
