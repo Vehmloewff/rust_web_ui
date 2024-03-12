@@ -1,16 +1,68 @@
 import { readDir, readText, writeText } from 'https://deno.land/x/dtils@2.4.0/mod.ts'
 import { Comment, DOMParser, Element, Text } from 'https://deno.land/x/deno_dom@v0.1.45/deno-dom-wasm.ts'
 import { pascalCase, snakeCase } from 'https://deno.land/x/case@2.2.0/mod.ts'
+import { basename, extname } from 'https://deno.land/std@0.219.0/path/mod.ts'
+import { toText } from 'https://deno.land/std@0.219.0/streams/mod.ts'
+import { parseArgs } from 'https://deno.land/std@0.219.0/cli/mod.ts'
 
-const inputDir = Deno.args[0]
-const outputDir = Deno.args[1]
-const files = await readDir(inputDir)
+export async function fromArgs(args: string[]) {
+	const options = parseArgs(args, { string: ['output-file', 'input-file', 'name', 'input-dir', 'output-dir'] })
 
-for (const file of files) {
-	console.log(`Parse ${file}`)
-	const html = await readText(file)
+	const inputDir = options['input-dir']
+	if (inputDir) {
+		const outputDir = options['output-dir']
+		if (!outputDir) throw new Error('Because --input-dir was passed, expected to find --output-dir')
+
+		await fromDirectory(inputDir, outputDir)
+		return
+	}
+
+	const name = options.name || null
+	const inputFile = options['input-file']
+	const outputFile = options['output-file'] || null
+
+	if (inputFile) {
+		return await fromFile(inputFile, name, outputFile)
+	}
+
+	if (!name) throw new Error('Cannot build rust widget from stdin unless the --name flag is passed')
+
+	return await fromStdin(name, outputFile)
+}
+
+async function fromFile(path: string, nameOverride: string | null, outputFile: string | null) {
+	const html = await readText(path)
+	const name = nameOverride ?? basename(path, extname(path))
+	const rust = fromTailwind(html, name)
+
+	if (outputFile) await writeText(outputFile, rust)
+	else await Deno.stdout.write(new TextEncoder().encode(rust))
+}
+
+async function fromStdin(name: string, outputFile: string | null) {
+	const html = await toText(Deno.stdin.readable)
+	const rust = fromTailwind(html, name)
+
+	if (outputFile) await writeText(outputFile, rust)
+	else await Deno.stdout.write(new TextEncoder().encode(rust))
+}
+
+async function fromDirectory(inputDir: string, outputDir: string) {
+	const files = await readDir(inputDir)
+
+	for (const file of files) {
+		console.log(`Parse ${file}`)
+		const html = await readText(file)
+		const name = basename(file, extname(file))
+		const rust = fromTailwind(html, name)
+
+		await writeText(`${outputDir}/${snakeCase(name)}.rs`, rust)
+	}
+}
+
+export function fromTailwind(html: string, name: string): string {
 	const document = new DOMParser().parseFromString(html, 'text/html')
-	if (!document) throw new Error(`failed to parse html at ${file}`)
+	if (!document) throw new Error(`failed to parse html`)
 
 	let notableChildCount = 0
 	let lastNotableChild: Element | null = null
@@ -28,10 +80,11 @@ for (const file of files) {
 
 	const rootNode = notableChildCount === 1 && lastNotableChild !== null ? lastNotableChild : document.body
 	const inner = buildNode(rootNode, 'ctx')
-	const rawPath = file.split('.').slice(0, -1).join('.')
-	const pascalName = pascalCase(rawPath)
+	const pascalName = pascalCase(name)
 
-	const rust = `pub struct ${pascalName};
+	const rust = `use rust_web_ui::*;
+
+pub struct ${pascalName};
 
 pub struct ${pascalName}Props {}
 
@@ -50,14 +103,11 @@ ${indent(indent(inner))}
 }
 `
 
-	await writeText(`${outputDir}/${snakeCase(rawPath)}.rs`, rust)
+	return rust
 }
 
 function buildNode(element: Element, handle: string): string {
 	const inner: string[] = []
-
-	const tag = element.tagName === 'BODY' ? 'div' : element.tagName.toLocaleLowerCase()
-	inner.push(`${handle}.set_tag("${tag}");`)
 
 	for (let index = 0; index < element.attributes.length; index++) {
 		const attribute = element.attributes.item(index)!
@@ -67,7 +117,7 @@ function buildNode(element: Element, handle: string): string {
 		if (name === 'class') {
 			inner.push(`${handle}.styles(${buildStyles(value)});`)
 		} else {
-			inner.push(`${handle}.set_attribute("${name}", "${value}");`)
+			inner.push(`${handle}.set_attribute("${name}", ${quote(value)});`)
 		}
 	}
 
@@ -86,7 +136,7 @@ function buildNode(element: Element, handle: string): string {
 			const text = child.textContent.trim()
 			if (!text.length) continue
 
-			inner.push(`${handle}.child("${childIndex}", Label).run(|props| props.set_text("${text}"));`)
+			inner.push(`${handle}.child("${childIndex}", Label).run(|props| props.set_text(${quote(text)}));`)
 
 			continue
 		}
@@ -98,7 +148,7 @@ function buildNode(element: Element, handle: string): string {
 			if (tag === 'svg') {
 				inner.push(`${handle}.child("${childIndex}", Icon).run(|props| {\n${indent(buildIcon(element, 'props'))}\n});`)
 			} else {
-				inner.push(`${handle}.child("${childIndex}", Dynamic::new("${tag}")).run(|props| {\n${indent(buildNode(element, 'props'))}\n});`)
+				inner.push(`${handle}.child("${childIndex}", Dynamic).run("${tag}", |props| {\n${indent(buildNode(element, 'props'))}\n});`)
 			}
 
 			continue
@@ -106,6 +156,10 @@ function buildNode(element: Element, handle: string): string {
 	}
 
 	return inner.join('\n').trim()
+}
+
+function quote(value: string) {
+	return value.includes('"') ? `r#"${value}"#` : `"${value}"`
 }
 
 function buildIcon(element: Element, handle: string) {
