@@ -1,4 +1,4 @@
-use crate::{ElementChildRepr, ElementRepr, State, Ui, ViewId, Window};
+use crate::{ElementChildRepr, ElementRepr, State, ViewId};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
@@ -109,7 +109,7 @@ impl Element {
 }
 
 impl Element {
-	pub fn child<'a, T>(&'a mut self, key: &str, window: &'a mut Window, _widget: T) -> Ui<'a, T> {
+	pub fn child(&mut self, key: &str) -> (&mut Node, &mut State) {
 		let has_key = self.keyed_children.contains_key(key);
 
 		if !has_key {
@@ -129,7 +129,7 @@ impl Element {
 
 		let ElementChild { node, state, .. } = self.keyed_children.get_mut(key).unwrap();
 
-		Ui::new(node, state, window)
+		(node, state)
 	}
 
 	pub fn get_updates(&mut self, updates: &mut Vec<ElementUpdate>) {
@@ -269,105 +269,75 @@ impl Element {
 
 #[cfg(test)]
 mod tests {
-	use crate::{Button, Ctx, Label, StatefulWidget};
-
 	use super::*;
 	use pretty_assertions::assert_eq;
 
-	struct Counter;
+	fn render_counter(el: &mut Element, count: usize) {
+		el.child("decrement_button")
+			.0
+			.get_element(|| Element::new("button"))
+			.set_attribute("__textContent", "Decrement");
 
-	struct CounterState {
-		count: usize,
+		el.child("label")
+			.0
+			.get_element(|| Element::new("span"))
+			.set_attribute("__textContent", &format!("current count is {count}"));
+
+		el.child("increment_button")
+			.0
+			.get_element(|| Element::new("button"))
+			.set_attribute("__textContent", "Increment");
 	}
 
-	impl Default for CounterState {
-		fn default() -> Self {
-			CounterState { count: 0 }
-		}
+	#[test]
+	fn build_repr() {
+		let mut element = Element::new("div");
+		render_counter(&mut element, 23);
+
+		let repr = element.get_repr();
+
+		assert_eq!(repr.tag, "div");
+		assert_eq!(repr.children.get(0).unwrap().key, "decrement_button");
+		assert_eq!(repr.children.get(1).unwrap().key, "label");
+		assert_eq!(repr.children.get(2).unwrap().key, "increment_button");
 	}
 
-	impl StatefulWidget<'_> for Counter {
-		type Props = ();
-		type State = CounterState;
+	#[test]
+	fn compute_diffs_after_render() {
+		let mut root = Element::new("div");
 
-		fn render(mut ctx: Ctx<'_>, _: Self::Props, state: &mut Self::State) {
-			let CounterState { count } = state;
+		// render the counter once just so that we can check the validity of a pure diff, where only one thing should change
+		render_counter(&mut root, 2);
+		root.start_diffing();
 
-			ctx.child("decrement_button", Button).run(|props| {
-				props.label("Decrement");
-			});
+		// updated and diff
+		let mut updates = Vec::new();
+		render_counter(&mut root, 11);
+		root.get_updates(&mut updates);
 
-			let label = format!("current count is {count}");
-			ctx.child("label", Label).run(|props| {
-				props.text(&label);
-			});
+		assert_eq!(updates.len(), 1);
+		assert_eq!(
+			updates.get(0).unwrap(),
+			&ElementUpdate::SetAttribute {
+				element_id: root.keyed_children.get("label").unwrap().node.element().unwrap().id.clone(),
+				name: "__textContent".into(),
+				value: Some("current count is 11".into())
+			}
+		);
 
-			ctx.child("increment_button", Button).run(|props| {
-				props.label("Increment");
-			});
+		// Update and diff a second time. Due to the un-pure nature of diffing, we need to make sure we can produce the same result twice
+		let mut updates = Vec::new();
+		render_counter(&mut root, 4);
+		Element::get_updates(&mut root, &mut updates);
 
-			*count += 1;
-		}
+		assert_eq!(updates.len(), 1);
+		assert_eq!(
+			updates.get(0).unwrap(),
+			&ElementUpdate::SetAttribute {
+				element_id: root.keyed_children.get("label").unwrap().node.element().unwrap().id.clone(),
+				name: "__textContent".into(),
+				value: Some("current count is 4".into())
+			}
+		);
 	}
-
-	// #[test]
-	// fn build_repr() {
-	// 	let mut root = Element::new("div");
-	// 	let mut ctx = Ctx::new();
-
-	// 	counter.render(&mut root, &mut ctx);
-
-	// 	let repr = Element::get_repr(&mut root);
-
-	// 	assert_eq!(repr.tag, "div");
-	// 	assert_eq!(repr.children.iter().find(|item| item.key == "decrement_button").unwrap().index, 0);
-	// 	assert_eq!(repr.children.iter().find(|item| item.key == "label").unwrap().index, 1);
-	// 	assert_eq!(repr.children.iter().find(|item| item.key == "increment_button").unwrap().index, 2);
-	// }
-
-	// #[test]
-	// fn compute_diffs_after_render() {
-	// 	let mut root = Element::new("div");
-	// 	let mut ctx = Ctx::new();
-
-	// 	let mut counter = Counter { count: 0 };
-
-	// 	// render the counter once just so that we can check the validity of a pure diff, where only one thing should change
-	// 	counter.render(&mut root, &mut ctx);
-	// 	Element::start_diffing(&mut root);
-
-	// 	// updated and diff
-	// 	let mut updates = Vec::new();
-	// 	counter.render(&mut root, &mut ctx);
-	// 	Element::get_updates(&mut root, &mut updates);
-
-	// 	assert_eq!(updates.len(), 1);
-	// 	assert_eq!(
-	// 		updates.get(0).unwrap(),
-	// 		&ElementUpdate::SetAttribute {
-	// 			element_id: root.keyed_children.get("label").unwrap().node.element().unwrap().id.clone(),
-	// 			name: "__textContent".into(),
-	// 			value: Some("current count is 1".into())
-	// 		}
-	// 	);
-
-	// 	println!("after this:::");
-
-	// 	// Update and diff a second time. Due to the un-pure nature of diffing, we need to make sure we can produce the same result twice
-	// 	let mut updates = Vec::new();
-	// 	counter.render(&mut root, &mut ctx);
-	// 	Element::get_updates(&mut root, &mut updates);
-
-	// 	dbg!(&updates);
-
-	// 	assert_eq!(updates.len(), 1);
-	// 	assert_eq!(
-	// 		updates.get(0).unwrap(),
-	// 		&ElementUpdate::SetAttribute {
-	// 			element_id: root.keyed_children.get("label").unwrap().node.element().unwrap().id.clone(),
-	// 			name: "__textContent".into(),
-	// 			value: Some("current count is 2".into())
-	// 		}
-	// 	);
-	// }
 }

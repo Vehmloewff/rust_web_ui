@@ -1,14 +1,18 @@
 use crate::{style::Style, Element, Node, State, Window};
 use std::marker::PhantomData;
 
+pub struct Dynamic;
+
 pub struct Ctx<'a> {
 	element: &'a mut Element,
 	window: &'a mut Window,
 }
 
 impl Ctx<'_> {
-	pub fn child<T>(&mut self, key: &str, widget: T) -> Ui<'_, T> {
-		self.element.child(key, self.window, widget)
+	pub fn child<T>(&mut self, key: &str, _widget: T) -> Ui<'_, T> {
+		let (node, state) = self.element.child(key);
+
+		Ui::new(node, state, &mut self.window)
 	}
 
 	pub fn set_attribute(&mut self, name: &str, value: &str) {
@@ -70,6 +74,14 @@ where
 		let state = unsafe { self.state.get::<State>() };
 
 		WidgetSpecifier::render(Ctx { element, window: self.window }, props, state)
+	}
+}
+
+impl<'a> Ui<'a, Dynamic> {
+	pub fn run(self, tag: impl Into<String>, func: impl FnOnce(Ctx<'a>)) {
+		let element = self.node.get_element(|| Element::new(tag));
+
+		func(Ctx { element, window: self.window })
 	}
 }
 
