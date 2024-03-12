@@ -1,5 +1,9 @@
 use std::fmt;
 
+use crate::style::Theme;
+
+const GLOBAL_CSS: &str = include_str!("./reset.css");
+
 pub enum WindowUpdate {
 	SetTitle { new_title: String },
 }
@@ -13,15 +17,17 @@ pub struct Window {
 	path: String,
 	path_did_change: bool,
 	updates: Vec<WindowUpdate>,
+	pub theme: Theme,
 }
 
 impl Window {
-	pub fn new(title: impl Into<String>, path: impl Into<String>) -> Window {
+	pub fn new(title: impl Into<String>, path: impl Into<String>, theme: Theme) -> Window {
 		Window {
 			title: title.into(),
 			path: path.into(),
 			path_did_change: true,
 			updates: Vec::new(),
+			theme,
 		}
 	}
 
@@ -52,6 +58,7 @@ impl Window {
 
 	pub fn write_html_head(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		write!(f, "<title>{}</title>", self.title)?;
+		write!(f, "<style>{GLOBAL_CSS}</style>")?;
 
 		Ok(())
 	}

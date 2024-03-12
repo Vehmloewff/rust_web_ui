@@ -1,4 +1,4 @@
-use crate::{Element, Node, State, Window};
+use crate::{style::Style, Element, Node, State, Window};
 use std::marker::PhantomData;
 
 pub struct Ctx<'a> {
@@ -13,6 +13,12 @@ impl Ctx<'_> {
 
 	pub fn set_attribute(&mut self, name: &str, value: &str) {
 		self.element.set_attribute(name, value)
+	}
+
+	pub fn styles(&mut self, styles: &[Style]) {
+		for style in styles {
+			style.apply_css(&self.window.theme, String::new(), &mut self.element.attributes)
+		}
 	}
 }
 

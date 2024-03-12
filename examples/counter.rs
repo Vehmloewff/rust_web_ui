@@ -1,4 +1,4 @@
-use rust_web_ui::{Button, Ctx, Label, StatefulWidget, View};
+use rust_web_ui::{Button, Ctx, Label, StatefulWidget, Theme, View};
 use warp::{filters::path::FullPath, reply::html, Filter};
 
 #[tokio::main]
@@ -10,7 +10,7 @@ async fn main() {
 		.map(|| warp::reply::with_status("not found", warp::http::StatusCode::NOT_FOUND));
 
 	let html_route = warp::get().and(warp::path::full()).then(|path: FullPath| async move {
-		let mut view = View::new("Rust Web Ui".into(), path.as_str().into());
+		let mut view = View::new("Rust Web Ui".into(), path.as_str().into(), Theme::default());
 
 		view.define_root("main", Counter).sun(|_| {});
 

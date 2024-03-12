@@ -14,6 +14,7 @@ pub use element::*;
 pub use label::*;
 pub use repr::*;
 pub use state::*;
+pub use style::*;
 pub use ui::*;
 pub use view::*;
 pub use view_id::ViewId;
