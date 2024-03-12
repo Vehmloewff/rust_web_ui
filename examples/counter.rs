@@ -10,7 +10,7 @@ async fn main() {
 		.map(|| warp::reply::with_status("not found", warp::http::StatusCode::NOT_FOUND));
 
 	let html_route = warp::get().and(warp::path::full()).then(|path: FullPath| async move {
-		let mut view = View::new("Rust Web Ui".into(), path.as_str().into(), Theme::default());
+		let mut view = View::new("Rust Web Ui", path.as_str(), Theme::default());
 
 		view.define_root("main", Counter).sun(|_| {});
 
