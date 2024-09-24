@@ -19,9 +19,9 @@ impl Ctx<'_> {
 		self.element.set_attribute(name, value)
 	}
 
-	pub fn styles(&mut self, styles: &[Style]) {
+	pub fn styles(&mut self, styles: Vec<Style>) {
 		for style in styles {
-			style.apply_css(&self.window.theme, String::new(), &mut self.element.attributes)
+			style.apply_css(&self.window.theme, "style:".to_string(), &mut self.element.attributes)
 		}
 	}
 }

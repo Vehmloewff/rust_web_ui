@@ -27,10 +27,16 @@ impl View {
 
 impl Display for View {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		write!(f, "<!DOCTYPE html><html lang=\"en\">")?;
+		let repr = self.get_repr();
+		write!(f, "<!DOCTYPE html><html lang=\"en\"><head>")?;
 
 		self.window.write_html_head(f)?;
-		self.get_repr().write_html(f, None)?;
+
+		write!(f, "<style>")?;
+		repr.write_css(f)?;
+		write!(f, "</style></head>")?;
+
+		repr.write_html(f, None)?;
 
 		write!(f, "</html>")?;
 

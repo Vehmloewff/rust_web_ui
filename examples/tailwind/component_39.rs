@@ -13,79 +13,113 @@ impl Default for Example39Props {
 impl Widget<'_> for Example39 {
 	type Props = Example39Props;
 
-	fn render(mut ctx: Ctx<'_>, props: Example39Props) {
-		ctx.styles(&[Style::Noop("")]);
+	fn render(mut ctx: Ctx<'_>, _props: Example39Props) {
+		ctx.styles(vec![Style::Noop("")]);
 		ctx.set_attribute("style", "");
 		
 		ctx.child("1", Dynamic).run("div", |mut props| {
-			props.styles(&[Style::Noop("bg-white")]);
-			props.set_attribute("style", "min-height: 16rem");
+			props.styles(vec![Style::Noop("relative"), Style::Noop("isolate"), Style::Noop("overflow-hidden"), Style::Color(Color::Fg(100)), Style::PaddingY(Size::Exact(64)), Style::OnScreen(Screen::Small, &[Style::PaddingY(Size::Exact(96))]), Style::OnScreen(Screen::Large, &[Style::PaddingY(Size::Exact(128))])]);
 			
 			props.child("1", Dynamic).run("div", |mut props| {
-				props.styles(&[Style::Noop("relative"), Style::Noop("isolate"), Style::Flex, Style::ItemsCenter, Style::Noop("gap-x-6"), Style::Noop("overflow-hidden"), Style::Color(Color::Fg(6)), Style::PaddingX(Size::Exact(24)), Style::PaddingY(Size::Exact(10)), Style::OnScreen(Screen::Small, &[Style::PaddingX(Size::Exact(14))]), Style::OnScreen(Screen::Small, &[Style::NoopGroup("before", &[Style::Noop("flex-1")])])]);
+				props.styles(vec![Style::Noop("mx-auto"), Style::Noop("max-w-7xl"), Style::PaddingX(Size::Exact(24)), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(32))])]);
 				
 				props.child("1", Dynamic).run("div", |mut props| {
-					props.styles(&[Style::Noop("absolute"), Style::Noop("left-[max(-7rem,calc(50%-52rem))]"), Style::Noop("top-1/2"), Style::Noop("-z-10"), Style::Noop("-translate-y-1/2"), Style::Noop("transform-gpu"), Style::Noop("blur-2xl")]);
-					props.set_attribute("aria-hidden", "true");
+					props.styles(vec![Style::Noop("mx-auto"), Style::Noop("grid"), Style::Noop("max-w-2xl"), Style::Noop("grid-cols-1"), Style::Noop("gap-x-8"), Style::Noop("gap-y-16"), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-none")]), Style::OnScreen(Screen::Large, &[Style::Noop("grid-cols-2")])]);
 					
 					props.child("1", Dynamic).run("div", |mut props| {
-						props.styles(&[Style::Noop("aspect-[577/310]"), Style::Noop("w-[36.0625rem]"), Style::Noop("bg-gradient-to-r"), Style::Noop("from-[#ff80b5]"), Style::Noop("to-[#9089fc]"), Style::Noop("opacity-30")]);
-						props.set_attribute("style", "clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)");
+						props.styles(vec![Style::Noop("max-w-xl"), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-lg")])]);
+						
+						props.child("1", Dynamic).run("h2", |mut props| {
+							props.styles(vec![Style::Noop("text-3xl"), Style::FontBold, Style::Noop("tracking-tight"), Style::Noop("text-white"), Style::OnScreen(Screen::Small, &[Style::Noop("text-4xl")])]);
+							
+							props.child("0", Label).run(|props| props.text("Subscribe to our newsletter."));
+						});
+						props.child("3", Dynamic).run("p", |mut props| {
+							props.styles(vec![Style::MarginTop(Size::Exact(16)), Style::Noop("text-lg"), Style::Noop("leading-8"), Style::TextColor(Color::Fg(33))]);
+							
+							props.child("0", Label).run(|props| props.text("Nostrud amet eu ullamco nisi aute in ad minim nostrud adipisicing velit quis. Duis tempor incididunt dolore."));
+						});
+						props.child("5", Dynamic).run("div", |mut props| {
+							props.styles(vec![Style::MarginTop(Size::Exact(24)), Style::Flex, Style::Noop("max-w-md"), Style::Noop("gap-x-4")]);
+							
+							props.child("1", Dynamic).run("label", |mut props| {
+								props.set_attribute("for", "email-address");
+								props.styles(vec![Style::Noop("sr-only")]);
+								
+								props.child("0", Label).run(|props| props.text("Email address"));
+							});
+							props.child("3", Dynamic).run("input", |mut props| {
+								props.set_attribute("id", "email-address");
+								props.set_attribute("name", "email");
+								props.set_attribute("type", "email");
+								props.set_attribute("autocomplete", "email");
+								props.set_attribute("required", "");
+								props.styles(vec![Style::Noop("min-w-0"), Style::Noop("flex-auto"), Style::Noop("rounded-md"), Style::Noop("border-0"), Style::Noop("bg-white/5"), Style::PaddingX(Size::Exact(14)), Style::PaddingY(Size::Exact(8)), Style::Noop("text-white"), Style::Noop("shadow-sm"), Style::Noop("ring-1"), Style::Noop("ring-inset"), Style::Noop("ring-white/10"), Style::OnFocus(&[Style::Noop("ring-2")]), Style::OnFocus(&[Style::Noop("ring-inset")]), Style::OnFocus(&[Style::Noop("ring-indigo-500")]), Style::OnScreen(Screen::Small, &[Style::Noop("text-sm")]), Style::OnScreen(Screen::Small, &[Style::Noop("leading-6")])]);
+								props.set_attribute("placeholder", "Enter your email");
+							});
+							props.child("5", Dynamic).run("button", |mut props| {
+								props.set_attribute("type", "submit");
+								props.styles(vec![Style::Noop("flex-none"), Style::Noop("rounded-md"), Style::Noop("bg-indigo-500"), Style::PaddingX(Size::Exact(14)), Style::PaddingY(Size::Exact(10)), Style::Noop("text-sm"), Style::FontSemibold, Style::Noop("text-white"), Style::Noop("shadow-sm"), Style::OnHover(&[Style::Noop("bg-indigo-400")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-2")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-offset-2")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-indigo-500")])]);
+								
+								props.child("0", Label).run(|props| props.text("Subscribe"));
+							});
+						});
+					});
+					props.child("3", Dynamic).run("dl", |mut props| {
+						props.styles(vec![Style::Noop("grid"), Style::Noop("grid-cols-1"), Style::Noop("gap-x-8"), Style::Noop("gap-y-10"), Style::OnScreen(Screen::Small, &[Style::Noop("grid-cols-2")]), Style::OnScreen(Screen::Large, &[Style::PaddingTop(Size::Exact(8))])]);
+						
+						props.child("1", Dynamic).run("div", |mut props| {
+							props.styles(vec![Style::Flex, Style::Noop("flex-col"), Style::Noop("items-start")]);
+							
+							props.child("1", Dynamic).run("div", |mut props| {
+								props.styles(vec![Style::Noop("rounded-md"), Style::Noop("bg-white/5"), Style::Padding(Size::Exact(8)), Style::Noop("ring-1"), Style::Noop("ring-white/10")]);
+								
+								props.child("1", Icon).run(|props| {
+									props.style(vec![Style::Width(Size::Exact(24)), Style::Width(Size::Exact(24)), Style::Noop("text-white")]);
+								});
+							});
+							props.child("3", Dynamic).run("dt", |mut props| {
+								props.styles(vec![Style::MarginTop(Size::Exact(16)), Style::FontSemibold, Style::Noop("text-white")]);
+								
+								props.child("0", Label).run(|props| props.text("Weekly articles"));
+							});
+							props.child("5", Dynamic).run("dd", |mut props| {
+								props.styles(vec![Style::MarginTop(Size::Exact(8)), Style::Noop("leading-7"), Style::TextColor(Color::Fg(44))]);
+								
+								props.child("0", Label).run(|props| props.text("Non laboris consequat cupidatat laborum magna. Eiusmod non irure cupidatat duis commodo amet."));
+							});
+						});
+						props.child("3", Dynamic).run("div", |mut props| {
+							props.styles(vec![Style::Flex, Style::Noop("flex-col"), Style::Noop("items-start")]);
+							
+							props.child("1", Dynamic).run("div", |mut props| {
+								props.styles(vec![Style::Noop("rounded-md"), Style::Noop("bg-white/5"), Style::Padding(Size::Exact(8)), Style::Noop("ring-1"), Style::Noop("ring-white/10")]);
+								
+								props.child("1", Icon).run(|props| {
+									props.style(vec![Style::Width(Size::Exact(24)), Style::Width(Size::Exact(24)), Style::Noop("text-white")]);
+								});
+							});
+							props.child("3", Dynamic).run("dt", |mut props| {
+								props.styles(vec![Style::MarginTop(Size::Exact(16)), Style::FontSemibold, Style::Noop("text-white")]);
+								
+								props.child("0", Label).run(|props| props.text("No spam"));
+							});
+							props.child("5", Dynamic).run("dd", |mut props| {
+								props.styles(vec![Style::MarginTop(Size::Exact(8)), Style::Noop("leading-7"), Style::TextColor(Color::Fg(44))]);
+								
+								props.child("0", Label).run(|props| props.text("Officia excepteur ullamco ut sint duis proident non adipisicing. Voluptate incididunt anim."));
+							});
+						});
 					});
 				});
-				props.child("3", Dynamic).run("div", |mut props| {
-					props.styles(&[Style::Noop("absolute"), Style::Noop("left-[max(45rem,calc(50%+8rem))]"), Style::Noop("top-1/2"), Style::Noop("-z-10"), Style::Noop("-translate-y-1/2"), Style::Noop("transform-gpu"), Style::Noop("blur-2xl")]);
-					props.set_attribute("aria-hidden", "true");
-					
-					props.child("1", Dynamic).run("div", |mut props| {
-						props.styles(&[Style::Noop("aspect-[577/310]"), Style::Noop("w-[36.0625rem]"), Style::Noop("bg-gradient-to-r"), Style::Noop("from-[#ff80b5]"), Style::Noop("to-[#9089fc]"), Style::Noop("opacity-30")]);
-						props.set_attribute("style", "clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)");
-					});
-				});
-				props.child("5", Dynamic).run("div", |mut props| {
-					props.styles(&[Style::Flex, Style::Noop("flex-wrap"), Style::ItemsCenter, Style::Noop("gap-x-4"), Style::Noop("gap-y-2")]);
-					
-					props.child("1", Dynamic).run("p", |mut props| {
-						props.styles(&[Style::Noop("text-sm"), Style::Noop("leading-6"), Style::TextColor(Color::Fg(100))]);
-						
-						props.child("1", Dynamic).run("strong", |mut props| {
-							props.styles(&[Style::FontSemibold]);
-							
-							props.child("0", Label).run(|props| props.text("GeneriCon 2023"));
-						});
-						props.child("2", Icon).run(|mut props| {
-							props.style(&[Style::MarginX(Size::Exact(8)), Style::Noop("inline"), Style::Width(Size::Exact(2)), Style::Width(Size::Exact(2)), Style::Noop("fill-current")]);
-						});
-						props.child("3", Label).run(|props| props.text("Join us in Denver from June 7 – 9 to see what’s coming next."));
-					});
-					props.child("3", Dynamic).run("a", |mut props| {
-						props.set_attribute("href", "#");
-						props.styles(&[Style::Noop("flex-none"), Style::Noop("rounded-full"), Style::Color(Color::Fg(100)), Style::PaddingX(Size::Exact(14)), Style::PaddingY(Size::Exact(4)), Style::Noop("text-sm"), Style::FontSemibold, Style::Noop("text-white"), Style::Noop("shadow-sm"), Style::OnHover(&[Style::Color(Color::Fg(78))]), Style::NoopGroup("focus-visible", &[Style::Noop("outline")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-2")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-offset-2")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-gray-900")])]);
-						
-						props.child("0", Label).run(|props| props.text("Register now"));
-						props.child("1", Dynamic).run("span", |mut props| {
-							props.set_attribute("aria-hidden", "true");
-							
-							props.child("0", Label).run(|props| props.text("→"));
-						});
-					});
-				});
-				props.child("7", Dynamic).run("div", |mut props| {
-					props.styles(&[Style::Flex, Style::Noop("flex-1"), Style::Noop("justify-end")]);
-					
-					props.child("1", Dynamic).run("button", |mut props| {
-						props.set_attribute("type", "button");
-						props.styles(&[Style::Noop("-m-3"), Style::Padding(Size::Exact(12)), Style::NoopGroup("focus-visible", &[Style::Noop("outline-offset-[-4px]")])]);
-						
-						props.child("1", Dynamic).run("span", |mut props| {
-							props.styles(&[Style::Noop("sr-only")]);
-							
-							props.child("0", Label).run(|props| props.text("Dismiss"));
-						});
-						props.child("3", Icon).run(|mut props| {
-							props.style(&[Style::Width(Size::Exact(20)), Style::Width(Size::Exact(20)), Style::TextColor(Color::Fg(100))]);
-						});
-					});
+			});
+			props.child("3", Dynamic).run("div", |mut props| {
+				props.styles(vec![Style::Noop("absolute"), Style::Noop("left-1/2"), Style::Noop("top-0"), Style::Noop("-z-10"), Style::Noop("-translate-x-1/2"), Style::Noop("blur-3xl"), Style::OnScreen(Screen::ExtraLarge(1), &[Style::Noop("-top-6")])]);
+				props.set_attribute("aria-hidden", "true");
+				
+				props.child("1", Dynamic).run("div", |mut props| {
+					props.styles(vec![Style::Noop("aspect-[1155/678]"), Style::Noop("w-[72.1875rem]"), Style::Noop("bg-gradient-to-tr"), Style::Noop("from-[#ff80b5]"), Style::Noop("to-[#9089fc]"), Style::Noop("opacity-30")]);
+					props.set_attribute("style", "clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)");
 				});
 			});
 		});

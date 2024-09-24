@@ -147,7 +147,11 @@ pub enum Style {
 	InlineBlock,
 	Block,
 
-	Rounded(Size),
+	RoundedSmall,
+	RoundedMedium,
+	RoundedLarge,
+	RoundedExtraLarge,
+	RoundedFully,
 
 	Color(Color),
 	TextColor(Color),
@@ -259,8 +263,20 @@ impl Style {
 				attributes.insert(key_base + "display", "block".into());
 			}
 
-			Style::Rounded(size) => {
-				attributes.insert(key_base + "border-radius", size.get_css());
+			Style::RoundedSmall => {
+				attributes.insert(key_base + "border-radius", "4px".into());
+			}
+			Style::RoundedMedium => {
+				attributes.insert(key_base + "border-radius", "8px".into());
+			}
+			Style::RoundedLarge => {
+				attributes.insert(key_base + "border-radius", "12px".into());
+			}
+			Style::RoundedExtraLarge => {
+				attributes.insert(key_base + "border-radius", "24px".into());
+			}
+			Style::RoundedFully => {
+				attributes.insert(key_base + "border-radius", "50%".into());
 			}
 
 			Style::Color(color) => color.apply_css(theme, key_base + "background-color", attributes),
@@ -296,7 +312,7 @@ impl Style {
 			}
 			Style::OnScreen(screen, styles) => {
 				for style in *styles {
-					style.apply_css(theme, format!("screen-{}:", screen.get_size()) + &key_base, attributes)
+					style.apply_css(theme, format!("{}screen-{}:", &key_base, screen.get_size()), attributes)
 				}
 			}
 			Style::Noop(_) => {}

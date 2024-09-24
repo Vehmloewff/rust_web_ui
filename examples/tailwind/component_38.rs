@@ -13,58 +13,74 @@ impl Default for Example38Props {
 impl Widget<'_> for Example38 {
 	type Props = Example38Props;
 
-	fn render(mut ctx: Ctx<'_>, props: Example38Props) {
-		ctx.styles(&[Style::Noop("")]);
+	fn render(mut ctx: Ctx<'_>, _props: Example38Props) {
+		ctx.styles(vec![Style::Noop("")]);
 		ctx.set_attribute("style", "");
 		
 		ctx.child("1", Dynamic).run("div", |mut props| {
-			props.styles(&[Style::Noop("bg-white"), Style::PaddingY(Size::Exact(96)), Style::OnScreen(Screen::Small, &[Style::PaddingY(Size::Exact(128))])]);
+			props.styles(vec![Style::Noop("bg-white")]);
+			props.set_attribute("style", "min-height: 16rem");
 			
 			props.child("1", Dynamic).run("div", |mut props| {
-				props.styles(&[Style::Noop("mx-auto"), Style::Noop("max-w-7xl"), Style::PaddingX(Size::Exact(24)), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(32))])]);
+				props.styles(vec![Style::Noop("relative"), Style::Noop("isolate"), Style::Flex, Style::ItemsCenter, Style::Noop("gap-x-6"), Style::Noop("overflow-hidden"), Style::Color(Color::Fg(6)), Style::PaddingX(Size::Exact(24)), Style::PaddingY(Size::Exact(10)), Style::OnScreen(Screen::Small, &[Style::PaddingX(Size::Exact(14))]), Style::OnScreen(Screen::Small, &[Style::NoopGroup("before", &[Style::Noop("flex-1")])])]);
 				
-				props.child("1", Dynamic).run("h2", |mut props| {
-					props.styles(&[Style::Noop("text-center"), Style::Noop("text-lg"), Style::FontSemibold, Style::Noop("leading-8"), Style::TextColor(Color::Fg(100))]);
+				props.child("1", Dynamic).run("div", |mut props| {
+					props.styles(vec![Style::Noop("absolute"), Style::Noop("left-[max(-7rem,calc(50%-52rem))]"), Style::Noop("top-1/2"), Style::Noop("-z-10"), Style::Noop("-translate-y-1/2"), Style::Noop("transform-gpu"), Style::Noop("blur-2xl")]);
+					props.set_attribute("aria-hidden", "true");
 					
-					props.child("0", Label).run(|props| props.text("Trusted by the world’s most innovative teams"));
+					props.child("1", Dynamic).run("div", |mut props| {
+						props.styles(vec![Style::Noop("aspect-[577/310]"), Style::Noop("w-[36.0625rem]"), Style::Noop("bg-gradient-to-r"), Style::Noop("from-[#ff80b5]"), Style::Noop("to-[#9089fc]"), Style::Noop("opacity-30")]);
+						props.set_attribute("style", "clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)");
+					});
 				});
 				props.child("3", Dynamic).run("div", |mut props| {
-					props.styles(&[Style::Noop("mx-auto"), Style::MarginTop(Size::Exact(40)), Style::Noop("grid"), Style::Noop("max-w-lg"), Style::Noop("grid-cols-4"), Style::ItemsCenter, Style::Noop("gap-x-8"), Style::Noop("gap-y-10"), Style::OnScreen(Screen::Small, &[Style::Noop("max-w-xl")]), Style::OnScreen(Screen::Small, &[Style::Noop("grid-cols-6")]), Style::OnScreen(Screen::Small, &[Style::Noop("gap-x-10")]), Style::OnScreen(Screen::Large, &[Style::MarginX(Size::Exact(0))]), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-none")]), Style::OnScreen(Screen::Large, &[Style::Noop("grid-cols-5")])]);
+					props.styles(vec![Style::Noop("absolute"), Style::Noop("left-[max(45rem,calc(50%+8rem))]"), Style::Noop("top-1/2"), Style::Noop("-z-10"), Style::Noop("-translate-y-1/2"), Style::Noop("transform-gpu"), Style::Noop("blur-2xl")]);
+					props.set_attribute("aria-hidden", "true");
 					
-					props.child("1", Dynamic).run("img", |mut props| {
-						props.styles(&[Style::Noop("col-span-2"), Style::Noop("max-h-12"), Style::Width(Size::Full), Style::Noop("object-contain"), Style::OnScreen(Screen::Large, &[Style::Noop("col-span-1")])]);
-						props.set_attribute("src", "https://tailwindui.com/img/logos/158x48/transistor-logo-gray-900.svg");
-						props.set_attribute("alt", "Transistor");
-						props.set_attribute("width", "158");
-						props.set_attribute("height", "48");
+					props.child("1", Dynamic).run("div", |mut props| {
+						props.styles(vec![Style::Noop("aspect-[577/310]"), Style::Noop("w-[36.0625rem]"), Style::Noop("bg-gradient-to-r"), Style::Noop("from-[#ff80b5]"), Style::Noop("to-[#9089fc]"), Style::Noop("opacity-30")]);
+						props.set_attribute("style", "clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)");
 					});
-					props.child("3", Dynamic).run("img", |mut props| {
-						props.styles(&[Style::Noop("col-span-2"), Style::Noop("max-h-12"), Style::Width(Size::Full), Style::Noop("object-contain"), Style::OnScreen(Screen::Large, &[Style::Noop("col-span-1")])]);
-						props.set_attribute("src", "https://tailwindui.com/img/logos/158x48/reform-logo-gray-900.svg");
-						props.set_attribute("alt", "Reform");
-						props.set_attribute("width", "158");
-						props.set_attribute("height", "48");
+				});
+				props.child("5", Dynamic).run("div", |mut props| {
+					props.styles(vec![Style::Flex, Style::Noop("flex-wrap"), Style::ItemsCenter, Style::Noop("gap-x-4"), Style::Noop("gap-y-2")]);
+					
+					props.child("1", Dynamic).run("p", |mut props| {
+						props.styles(vec![Style::Noop("text-sm"), Style::Noop("leading-6"), Style::TextColor(Color::Fg(100))]);
+						
+						props.child("1", Dynamic).run("strong", |mut props| {
+							props.styles(vec![Style::FontSemibold]);
+							
+							props.child("0", Label).run(|props| props.text("GeneriCon 2023"));
+						});
+						props.child("2", Icon).run(|props| {
+							props.style(vec![Style::MarginX(Size::Exact(8)), Style::Noop("inline"), Style::Width(Size::Exact(2)), Style::Width(Size::Exact(2)), Style::Noop("fill-current")]);
+						});
+						props.child("3", Label).run(|props| props.text("Join us in Denver from June 7 – 9 to see what’s coming next."));
 					});
-					props.child("5", Dynamic).run("img", |mut props| {
-						props.styles(&[Style::Noop("col-span-2"), Style::Noop("max-h-12"), Style::Width(Size::Full), Style::Noop("object-contain"), Style::OnScreen(Screen::Large, &[Style::Noop("col-span-1")])]);
-						props.set_attribute("src", "https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg");
-						props.set_attribute("alt", "Tuple");
-						props.set_attribute("width", "158");
-						props.set_attribute("height", "48");
+					props.child("3", Dynamic).run("a", |mut props| {
+						props.set_attribute("href", "#");
+						props.styles(vec![Style::Noop("flex-none"), Style::Noop("rounded-full"), Style::Color(Color::Fg(100)), Style::PaddingX(Size::Exact(14)), Style::PaddingY(Size::Exact(4)), Style::Noop("text-sm"), Style::FontSemibold, Style::Noop("text-white"), Style::Noop("shadow-sm"), Style::OnHover(&[Style::Color(Color::Fg(78))]), Style::NoopGroup("focus-visible", &[Style::Noop("outline")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-2")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-offset-2")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-gray-900")])]);
+						
+						props.child("0", Label).run(|props| props.text("Register now"));
+						props.child("1", Dynamic).run("span", |_| {});
 					});
-					props.child("7", Dynamic).run("img", |mut props| {
-						props.styles(&[Style::Noop("col-span-2"), Style::Noop("max-h-12"), Style::Width(Size::Full), Style::Noop("object-contain"), Style::OnScreen(Screen::Small, &[Style::Noop("col-start-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("col-span-1")])]);
-						props.set_attribute("src", "https://tailwindui.com/img/logos/158x48/savvycal-logo-gray-900.svg");
-						props.set_attribute("alt", "SavvyCal");
-						props.set_attribute("width", "158");
-						props.set_attribute("height", "48");
-					});
-					props.child("9", Dynamic).run("img", |mut props| {
-						props.styles(&[Style::Noop("col-span-2"), Style::Noop("col-start-2"), Style::Noop("max-h-12"), Style::Width(Size::Full), Style::Noop("object-contain"), Style::OnScreen(Screen::Small, &[Style::Noop("col-start-auto")]), Style::OnScreen(Screen::Large, &[Style::Noop("col-span-1")])]);
-						props.set_attribute("src", "https://tailwindui.com/img/logos/158x48/statamic-logo-gray-900.svg");
-						props.set_attribute("alt", "Statamic");
-						props.set_attribute("width", "158");
-						props.set_attribute("height", "48");
+				});
+				props.child("7", Dynamic).run("div", |mut props| {
+					props.styles(vec![Style::Flex, Style::Noop("flex-1"), Style::Noop("justify-end")]);
+					
+					props.child("1", Dynamic).run("button", |mut props| {
+						props.set_attribute("type", "button");
+						props.styles(vec![Style::Noop("-m-3"), Style::Padding(Size::Exact(12)), Style::NoopGroup("focus-visible", &[Style::Noop("outline-offset-[-4px]")])]);
+						
+						props.child("1", Dynamic).run("span", |mut props| {
+							props.styles(vec![Style::Noop("sr-only")]);
+							
+							props.child("0", Label).run(|props| props.text("Dismiss"));
+						});
+						props.child("3", Icon).run(|props| {
+							props.style(vec![Style::Width(Size::Exact(20)), Style::Width(Size::Exact(20)), Style::TextColor(Color::Fg(100))]);
+						});
 					});
 				});
 			});

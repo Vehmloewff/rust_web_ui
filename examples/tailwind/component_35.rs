@@ -13,61 +13,64 @@ impl Default for Example35Props {
 impl Widget<'_> for Example35 {
 	type Props = Example35Props;
 
-	fn render(mut ctx: Ctx<'_>, props: Example35Props) {
-		ctx.styles(&[Style::Noop("")]);
+	fn render(mut ctx: Ctx<'_>, _props: Example35Props) {
+		ctx.styles(vec![Style::Noop("")]);
 		ctx.set_attribute("style", "");
 		
-		ctx.child("1", Dynamic).run("section", |mut props| {
-			props.styles(&[Style::Noop("relative"), Style::Noop("isolate"), Style::Noop("overflow-hidden"), Style::Noop("bg-white"), Style::PaddingX(Size::Exact(24)), Style::PaddingY(Size::Exact(96)), Style::OnScreen(Screen::Small, &[Style::PaddingY(Size::Exact(128))]), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(32))])]);
+		ctx.child("1", Dynamic).run("div", |mut props| {
+			props.styles(vec![Style::Noop("bg-white")]);
 			
 			props.child("1", Dynamic).run("div", |mut props| {
-				props.styles(&[Style::Noop("absolute"), Style::Noop("inset-0"), Style::Noop("-z-10"), Style::Noop("bg-[radial-gradient(45rem_50rem_at_top,theme(colors.indigo.100),white)]"), Style::Noop("opacity-20")]);
-			});
-			props.child("3", Dynamic).run("div", |mut props| {
-				props.styles(&[Style::Noop("absolute"), Style::Noop("inset-y-0"), Style::Noop("right-1/2"), Style::Noop("-z-10"), Style::MarginRight(Size::Exact(64)), Style::Noop("w-[200%]"), Style::Noop("origin-bottom-left"), Style::Noop("skew-x-[-30deg]"), Style::Noop("bg-white"), Style::Noop("shadow-xl"), Style::Noop("shadow-indigo-600/10"), Style::Noop("ring-1"), Style::Noop("ring-indigo-50"), Style::OnScreen(Screen::Small, &[Style::MarginRight(Size::Exact(112))]), Style::OnScreen(Screen::Large, &[Style::MarginRight(Size::Exact(0))]), Style::OnScreen(Screen::ExtraLarge(1), &[Style::MarginRight(Size::Exact(64))]), Style::OnScreen(Screen::ExtraLarge(1), &[Style::Noop("origin-center")])]);
-			});
-			props.child("5", Dynamic).run("div", |mut props| {
-				props.styles(&[Style::Noop("mx-auto"), Style::Noop("max-w-2xl"), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-4xl")])]);
+				props.styles(vec![Style::Noop("mx-auto"), Style::Noop("max-w-7xl"), Style::PaddingY(Size::Exact(96)), Style::OnScreen(Screen::Small, &[Style::PaddingX(Size::Exact(24))]), Style::OnScreen(Screen::Small, &[Style::PaddingY(Size::Exact(128))]), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(32))])]);
 				
-				props.child("1", Dynamic).run("img", |mut props| {
-					props.styles(&[Style::Noop("mx-auto"), Style::Width(Size::Exact(48))]);
-					props.set_attribute("src", "https://tailwindui.com/img/logos/workcation-logo-indigo-600.svg");
-					props.set_attribute("alt", "");
-				});
-				props.child("3", Dynamic).run("figure", |mut props| {
-					props.styles(&[Style::MarginTop(Size::Exact(40))]);
+				props.child("1", Dynamic).run("div", |mut props| {
+					props.styles(vec![Style::Noop("relative"), Style::Noop("isolate"), Style::Noop("overflow-hidden"), Style::Color(Color::Fg(100)), Style::PaddingX(Size::Exact(24)), Style::PaddingTop(Size::Exact(64)), Style::Noop("shadow-2xl"), Style::OnScreen(Screen::Small, &[Style::Noop("rounded-3xl")]), Style::OnScreen(Screen::Small, &[Style::PaddingX(Size::Exact(64))]), Style::OnScreen(Screen::Medium, &[Style::PaddingTop(Size::Exact(96))]), Style::OnScreen(Screen::Large, &[Style::Flex]), Style::OnScreen(Screen::Large, &[Style::Noop("gap-x-20")]), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(96))]), Style::OnScreen(Screen::Large, &[Style::PaddingTop(Size::Exact(0))])]);
 					
-					props.child("1", Dynamic).run("blockquote", |mut props| {
-						props.styles(&[Style::Noop("text-center"), Style::Noop("text-xl"), Style::FontSemibold, Style::Noop("leading-8"), Style::TextColor(Color::Fg(100)), Style::OnScreen(Screen::Small, &[Style::Noop("text-2xl")]), Style::OnScreen(Screen::Small, &[Style::Noop("leading-9")])]);
+					props.child("1", Icon).run(|props| {
+						props.style(vec![Style::Noop("absolute"), Style::Noop("left-1/2"), Style::Noop("top-1/2"), Style::Noop("-z-10"), Style::Noop("h-[64rem]"), Style::Noop("w-[64rem]"), Style::Noop("-translate-y-1/2"), Style::NoopGroup("[mask-image", &[Style::Noop("radial-gradient(closest-side,white,transparent)]")]), Style::OnScreen(Screen::Small, &[Style::Noop("left-full")]), Style::OnScreen(Screen::Small, &[Style::Noop("-ml-80")]), Style::OnScreen(Screen::Large, &[Style::Noop("left-1/2")]), Style::OnScreen(Screen::Large, &[Style::MarginLeft(Size::Exact(0))]), Style::OnScreen(Screen::Large, &[Style::Noop("-translate-x-1/2")]), Style::OnScreen(Screen::Large, &[Style::Noop("translate-y-0")])]);
+					});
+					props.child("3", Dynamic).run("div", |mut props| {
+						props.styles(vec![Style::Noop("mx-auto"), Style::Noop("max-w-md"), Style::Noop("text-center"), Style::OnScreen(Screen::Large, &[Style::MarginX(Size::Exact(0))]), Style::OnScreen(Screen::Large, &[Style::Noop("flex-auto")]), Style::OnScreen(Screen::Large, &[Style::PaddingY(Size::Exact(128))]), Style::OnScreen(Screen::Large, &[Style::Noop("text-left")])]);
 						
-						props.child("1", Dynamic).run("p", |mut props| {
-							props.child("0", Label).run(|props| props.text("“Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo expedita voluptas culpa sapiente alias molestiae. Numquam corrupti in laborum sed rerum et corporis.”"));
+						props.child("1", Dynamic).run("h2", |mut props| {
+							props.styles(vec![Style::Noop("text-3xl"), Style::FontBold, Style::Noop("tracking-tight"), Style::Noop("text-white"), Style::OnScreen(Screen::Small, &[Style::Noop("text-4xl")])]);
+							
+							props.child("0", Label).run(|props| props.text("Boost your productivity."));
+							props.child("1", Dynamic).run("br", |_| {});
+							props.child("2", Label).run(|props| props.text("Start using our app today."));
+						});
+						props.child("3", Dynamic).run("p", |mut props| {
+							props.styles(vec![Style::MarginTop(Size::Exact(24)), Style::Noop("text-lg"), Style::Noop("leading-8"), Style::TextColor(Color::Fg(33))]);
+							
+							props.child("0", Label).run(|props| props.text("Ac euismod vel sit maecenas id pellentesque eu sed consectetur. Malesuada adipiscing sagittis vel nulla."));
+						});
+						props.child("5", Dynamic).run("div", |mut props| {
+							props.styles(vec![Style::MarginTop(Size::Exact(40)), Style::Flex, Style::ItemsCenter, Style::JustifyCenter, Style::Noop("gap-x-6"), Style::OnScreen(Screen::Large, &[Style::Noop("justify-start")])]);
+							
+							props.child("1", Dynamic).run("a", |mut props| {
+								props.set_attribute("href", "#");
+								props.styles(vec![Style::Noop("rounded-md"), Style::Noop("bg-white"), Style::PaddingX(Size::Exact(14)), Style::PaddingY(Size::Exact(10)), Style::Noop("text-sm"), Style::FontSemibold, Style::TextColor(Color::Fg(100)), Style::Noop("shadow-sm"), Style::OnHover(&[Style::Color(Color::Fg(11))]), Style::NoopGroup("focus-visible", &[Style::Noop("outline")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-2")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-offset-2")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-white")])]);
+								
+								props.child("0", Label).run(|props| props.text("Get started"));
+							});
+							props.child("3", Dynamic).run("a", |mut props| {
+								props.set_attribute("href", "#");
+								props.styles(vec![Style::Noop("text-sm"), Style::FontSemibold, Style::Noop("leading-6"), Style::Noop("text-white")]);
+								
+								props.child("0", Label).run(|props| props.text("Learn more"));
+								props.child("1", Dynamic).run("span", |_| {});
+							});
 						});
 					});
-					props.child("3", Dynamic).run("figcaption", |mut props| {
-						props.styles(&[Style::MarginTop(Size::Exact(40))]);
+					props.child("5", Dynamic).run("div", |mut props| {
+						props.styles(vec![Style::Noop("relative"), Style::MarginTop(Size::Exact(64)), Style::Width(Size::Exact(320)), Style::OnScreen(Screen::Large, &[Style::MarginTop(Size::Exact(32))])]);
 						
 						props.child("1", Dynamic).run("img", |mut props| {
-							props.styles(&[Style::Noop("mx-auto"), Style::Width(Size::Exact(40)), Style::Width(Size::Exact(40)), Style::Noop("rounded-full")]);
-							props.set_attribute("src", "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80");
-							props.set_attribute("alt", "");
-						});
-						props.child("3", Dynamic).run("div", |mut props| {
-							props.styles(&[Style::MarginTop(Size::Exact(16)), Style::Flex, Style::ItemsCenter, Style::JustifyCenter, Style::SpaceX(Size::Exact(12)), Style::Noop("text-base")]);
-							
-							props.child("1", Dynamic).run("div", |mut props| {
-								props.styles(&[Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
-								
-								props.child("0", Label).run(|props| props.text("Judith Black"));
-							});
-							props.child("3", Icon).run(|mut props| {
-								props.style(&[Style::Noop("fill-gray-900")]);
-							});
-							props.child("5", Dynamic).run("div", |mut props| {
-								props.styles(&[Style::TextColor(Color::Fg(67))]);
-								
-								props.child("0", Label).run(|props| props.text("CEO of Workcation"));
-							});
+							props.styles(vec![Style::Noop("absolute"), Style::Noop("left-0"), Style::Noop("top-0"), Style::Noop("w-[57rem]"), Style::Noop("max-w-none"), Style::Noop("rounded-md"), Style::Noop("bg-white/5"), Style::Noop("ring-1"), Style::Noop("ring-white/10")]);
+							props.set_attribute("src", "https://tailwindui.com/img/component-images/dark-project-app-screenshot.png");
+							props.set_attribute("alt", "App screenshot");
+							props.set_attribute("width", "1824");
+							props.set_attribute("height", "1080");
 						});
 					});
 				});

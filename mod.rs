@@ -1,5 +1,6 @@
 mod button;
 mod element;
+mod icon;
 mod label;
 mod repr;
 mod state;
@@ -11,6 +12,7 @@ mod window;
 
 pub use button::*;
 pub use element::*;
+pub use icon::*;
 pub use label::*;
 pub use repr::*;
 pub use state::*;

@@ -13,214 +13,136 @@ impl Default for Example31Props {
 impl Widget<'_> for Example31 {
 	type Props = Example31Props;
 
-	fn render(mut ctx: Ctx<'_>, props: Example31Props) {
-		ctx.styles(&[Style::Noop("")]);
+	fn render(mut ctx: Ctx<'_>, _props: Example31Props) {
+		ctx.styles(vec![Style::Noop("")]);
 		ctx.set_attribute("style", "");
 		
 		ctx.child("1", Dynamic).run("div", |mut props| {
-			props.styles(&[Style::Noop("bg-white")]);
-			props.set_attribute("style", "min-height: 712px");
+			props.styles(vec![Style::OnScreen(Screen::Large, &[Style::Noop("h-[985px]")]), Style::OnScreen(Screen::Large, &[Style::Noop("overflow-y-auto")])]);
 			
 			props.child("1", Dynamic).run("div", |mut props| {
-				props.styles(&[Style::Flex, Style::ItemsCenter, Style::JustifyCenter, Style::Padding(Size::Exact(32))]);
+				props.styles(vec![Style::Noop("relative"), Style::Noop("isolate"), Style::Noop("overflow-hidden"), Style::Noop("bg-white"), Style::PaddingX(Size::Exact(24)), Style::PaddingY(Size::Exact(96)), Style::OnScreen(Screen::Small, &[Style::PaddingY(Size::Exact(128))]), Style::OnScreen(Screen::Large, &[Style::Noop("overflow-visible")]), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(0))])]);
 				
 				props.child("1", Dynamic).run("div", |mut props| {
-					props.styles(&[Style::Noop("relative")]);
-					props.set_attribute("x-data", "Components.popover({ open: true, focus: false })");
-					props.set_attribute("x-init", "init()");
-					props.set_attribute("@keydown.escape", "onEscape");
-					props.set_attribute("@close-popover-group.window", "onClosePopoverGroup");
+					props.styles(vec![Style::Noop("absolute"), Style::Noop("inset-0"), Style::Noop("-z-10"), Style::Noop("overflow-hidden")]);
 					
-					props.child("1", Dynamic).run("button", |mut props| {
-						props.set_attribute("type", "button");
-						props.styles(&[Style::InlineFlex, Style::ItemsCenter, Style::Noop("gap-x-1"), Style::Noop("text-sm"), Style::FontSemibold, Style::Noop("leading-6"), Style::TextColor(Color::Fg(100))]);
-						props.set_attribute("@click", "toggle");
-						props.set_attribute("@mousedown", "if (open) $event.preventDefault()");
-						props.set_attribute("aria-expanded", "false");
-						props.set_attribute(":aria-expanded", "open.toString()");
+					props.child("1", Icon).run(|props| {
+						props.style(vec![Style::Noop("absolute"), Style::Noop("left-[max(50%,25rem)]"), Style::Noop("top-0"), Style::Noop("h-[64rem]"), Style::Noop("w-[128rem]"), Style::Noop("-translate-x-1/2"), Style::Noop("stroke-gray-200"), Style::NoopGroup("[mask-image", &[Style::Noop("radial-gradient(64rem_64rem_at_top,white,transparent)]")])]);
+					});
+				});
+				props.child("3", Dynamic).run("div", |mut props| {
+					props.styles(vec![Style::Noop("mx-auto"), Style::Noop("grid"), Style::Noop("max-w-2xl"), Style::Noop("grid-cols-1"), Style::Noop("gap-x-8"), Style::Noop("gap-y-16"), Style::OnScreen(Screen::Large, &[Style::MarginX(Size::Exact(0))]), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-none")]), Style::OnScreen(Screen::Large, &[Style::Noop("grid-cols-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("items-start")]), Style::OnScreen(Screen::Large, &[Style::Noop("gap-y-10")])]);
+					
+					props.child("1", Dynamic).run("div", |mut props| {
+						props.styles(vec![Style::OnScreen(Screen::Large, &[Style::Noop("col-span-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("col-start-1")]), Style::OnScreen(Screen::Large, &[Style::Noop("row-start-1")]), Style::OnScreen(Screen::Large, &[Style::Noop("mx-auto")]), Style::OnScreen(Screen::Large, &[Style::Noop("grid")]), Style::OnScreen(Screen::Large, &[Style::Width(Size::Full)]), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-7xl")]), Style::OnScreen(Screen::Large, &[Style::Noop("grid-cols-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("gap-x-8")]), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(32))])]);
 						
-						props.child("1", Dynamic).run("span", |mut props| {
-							props.child("0", Label).run(|props| props.text("Solutions"));
-						});
-						props.child("3", Icon).run(|mut props| {
-							props.style(&[Style::Width(Size::Exact(20)), Style::Width(Size::Exact(20))]);
+						props.child("1", Dynamic).run("div", |mut props| {
+							props.styles(vec![Style::OnScreen(Screen::Large, &[Style::PaddingRight(Size::Exact(16))])]);
+							
+							props.child("1", Dynamic).run("div", |mut props| {
+								props.styles(vec![Style::OnScreen(Screen::Large, &[Style::Noop("max-w-lg")])]);
+								
+								props.child("1", Dynamic).run("p", |mut props| {
+									props.styles(vec![Style::Noop("text-base"), Style::FontSemibold, Style::Noop("leading-7"), Style::Noop("text-indigo-600")]);
+									
+									props.child("0", Label).run(|props| props.text("Deploy faster"));
+								});
+								props.child("3", Dynamic).run("h1", |mut props| {
+									props.styles(vec![Style::MarginTop(Size::Exact(8)), Style::Noop("text-3xl"), Style::FontBold, Style::Noop("tracking-tight"), Style::TextColor(Color::Fg(100)), Style::OnScreen(Screen::Small, &[Style::Noop("text-4xl")])]);
+									
+									props.child("0", Label).run(|props| props.text("A better workflow"));
+								});
+								props.child("5", Dynamic).run("p", |mut props| {
+									props.styles(vec![Style::MarginTop(Size::Exact(24)), Style::Noop("text-xl"), Style::Noop("leading-8"), Style::TextColor(Color::Fg(78))]);
+									
+									props.child("0", Label).run(|props| props.text("Aliquet nec orci mattis amet quisque ullamcorper neque, nibh sem. At arcu, sit dui mi, nibh dui, diam eget aliquam. Quisque id at vitae feugiat egestas."));
+								});
+							});
 						});
 					});
 					props.child("3", Dynamic).run("div", |mut props| {
-						props.set_attribute("x-show", "open");
-						props.set_attribute("x-transition:enter", "transition ease-out duration-200");
-						props.set_attribute("x-transition:enter-start", "opacity-0 translate-y-1");
-						props.set_attribute("x-transition:enter-end", "opacity-100 translate-y-0");
-						props.set_attribute("x-transition:leave", "transition ease-in duration-150");
-						props.set_attribute("x-transition:leave-start", "opacity-100 translate-y-0");
-						props.set_attribute("x-transition:leave-end", "opacity-0 translate-y-1");
-						props.set_attribute("x-description", "Flyout menu, show/hide based on flyout menu state.");
-						props.styles(&[Style::Noop("absolute"), Style::Noop("left-1/2"), Style::Noop("z-10"), Style::MarginTop(Size::Exact(20)), Style::Flex, Style::Noop("w-screen"), Style::Noop("max-w-max"), Style::Noop("-translate-x-1/2"), Style::PaddingX(Size::Exact(16))]);
-						props.set_attribute("x-ref", "panel");
-						props.set_attribute("@click.away", "open = false");
+						props.styles(vec![Style::Noop("-ml-12"), Style::Noop("-mt-12"), Style::Padding(Size::Exact(48)), Style::OnScreen(Screen::Large, &[Style::Noop("sticky")]), Style::OnScreen(Screen::Large, &[Style::Noop("top-4")]), Style::OnScreen(Screen::Large, &[Style::Noop("col-start-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("row-span-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("row-start-1")]), Style::OnScreen(Screen::Large, &[Style::Noop("overflow-hidden")])]);
+						
+						props.child("1", Dynamic).run("img", |mut props| {
+							props.styles(vec![Style::Noop("w-[48rem]"), Style::Noop("max-w-none"), Style::Noop("rounded-xl"), Style::Color(Color::Fg(100)), Style::Noop("shadow-xl"), Style::Noop("ring-1"), Style::Noop("ring-gray-400/10"), Style::OnScreen(Screen::Small, &[Style::Noop("w-[57rem]")])]);
+							props.set_attribute("src", "https://tailwindui.com/img/component-images/dark-project-app-screenshot.png");
+							props.set_attribute("alt", "");
+						});
+					});
+					props.child("5", Dynamic).run("div", |mut props| {
+						props.styles(vec![Style::OnScreen(Screen::Large, &[Style::Noop("col-span-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("col-start-1")]), Style::OnScreen(Screen::Large, &[Style::Noop("row-start-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("mx-auto")]), Style::OnScreen(Screen::Large, &[Style::Noop("grid")]), Style::OnScreen(Screen::Large, &[Style::Width(Size::Full)]), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-7xl")]), Style::OnScreen(Screen::Large, &[Style::Noop("grid-cols-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("gap-x-8")]), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(32))])]);
 						
 						props.child("1", Dynamic).run("div", |mut props| {
-							props.styles(&[Style::Noop("w-screen"), Style::Noop("max-w-md"), Style::Noop("flex-auto"), Style::Noop("overflow-hidden"), Style::Noop("rounded-3xl"), Style::Noop("bg-white"), Style::Noop("text-sm"), Style::Noop("leading-6"), Style::Noop("shadow-lg"), Style::Noop("ring-1"), Style::Noop("ring-gray-900/5")]);
+							props.styles(vec![Style::OnScreen(Screen::Large, &[Style::PaddingRight(Size::Exact(16))])]);
 							
 							props.child("1", Dynamic).run("div", |mut props| {
-								props.styles(&[Style::Padding(Size::Exact(16))]);
+								props.styles(vec![Style::Noop("max-w-xl"), Style::Noop("text-base"), Style::Noop("leading-7"), Style::TextColor(Color::Fg(78)), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-lg")])]);
 								
-								props.child("1", Dynamic).run("div", |mut props| {
-									props.styles(&[Style::Noop("group"), Style::Noop("relative"), Style::Flex, Style::Noop("gap-x-6"), Style::Noop("rounded-lg"), Style::Padding(Size::Exact(16)), Style::OnHover(&[Style::Color(Color::Fg(6))])]);
+								props.child("1", Dynamic).run("p", |_| {});
+								props.child("3", Dynamic).run("ul", |mut props| {
+									props.set_attribute("role", "list");
+									props.styles(vec![Style::MarginTop(Size::Exact(32)), Style::SpaceY(Size::Exact(32)), Style::TextColor(Color::Fg(67))]);
 									
-									props.child("1", Dynamic).run("div", |mut props| {
-										props.styles(&[Style::MarginTop(Size::Exact(4)), Style::Flex, Style::Width(Size::Exact(44)), Style::Width(Size::Exact(44)), Style::Noop("flex-none"), Style::ItemsCenter, Style::JustifyCenter, Style::Noop("rounded-lg"), Style::Color(Color::Fg(6)), Style::NoopGroup("group-hover", &[Style::Noop("bg-white")])]);
+									props.child("1", Dynamic).run("li", |mut props| {
+										props.styles(vec![Style::Flex, Style::Noop("gap-x-3")]);
 										
-										props.child("1", Icon).run(|mut props| {
-											props.style(&[Style::Width(Size::Exact(24)), Style::Width(Size::Exact(24)), Style::TextColor(Color::Fg(67)), Style::NoopGroup("group-hover", &[Style::Noop("text-indigo-600")])]);
+										props.child("1", Icon).run(|props| {
+											props.style(vec![Style::MarginTop(Size::Exact(4)), Style::Width(Size::Exact(20)), Style::Width(Size::Exact(20)), Style::Noop("flex-none"), Style::Noop("text-indigo-600")]);
 										});
-									});
-									props.child("3", Dynamic).run("div", |mut props| {
-										props.child("1", Dynamic).run("a", |mut props| {
-											props.set_attribute("href", "#");
-											props.styles(&[Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
-											
-											props.child("0", Label).run(|props| props.text("Analytics"));
-											props.child("1", Dynamic).run("span", |mut props| {
-												props.styles(&[Style::Noop("absolute"), Style::Noop("inset-0")]);
+										props.child("3", Dynamic).run("span", |mut props| {
+											props.child("0", Dynamic).run("strong", |mut props| {
+												props.styles(vec![Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
+												
+												props.child("0", Label).run(|props| props.text("Push to deploy."));
 											});
-										});
-										props.child("3", Dynamic).run("p", |mut props| {
-											props.styles(&[Style::MarginTop(Size::Exact(4)), Style::TextColor(Color::Fg(67))]);
-											
-											props.child("0", Label).run(|props| props.text("Get a better understanding of your traffic"));
+											props.child("1", Label).run(|props| props.text("Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione."));
 										});
 									});
-								});
-								props.child("3", Dynamic).run("div", |mut props| {
-									props.styles(&[Style::Noop("group"), Style::Noop("relative"), Style::Flex, Style::Noop("gap-x-6"), Style::Noop("rounded-lg"), Style::Padding(Size::Exact(16)), Style::OnHover(&[Style::Color(Color::Fg(6))])]);
-									
-									props.child("1", Dynamic).run("div", |mut props| {
-										props.styles(&[Style::MarginTop(Size::Exact(4)), Style::Flex, Style::Width(Size::Exact(44)), Style::Width(Size::Exact(44)), Style::Noop("flex-none"), Style::ItemsCenter, Style::JustifyCenter, Style::Noop("rounded-lg"), Style::Color(Color::Fg(6)), Style::NoopGroup("group-hover", &[Style::Noop("bg-white")])]);
+									props.child("3", Dynamic).run("li", |mut props| {
+										props.styles(vec![Style::Flex, Style::Noop("gap-x-3")]);
 										
-										props.child("1", Icon).run(|mut props| {
-											props.style(&[Style::Width(Size::Exact(24)), Style::Width(Size::Exact(24)), Style::TextColor(Color::Fg(67)), Style::NoopGroup("group-hover", &[Style::Noop("text-indigo-600")])]);
+										props.child("1", Icon).run(|props| {
+											props.style(vec![Style::MarginTop(Size::Exact(4)), Style::Width(Size::Exact(20)), Style::Width(Size::Exact(20)), Style::Noop("flex-none"), Style::Noop("text-indigo-600")]);
 										});
-									});
-									props.child("3", Dynamic).run("div", |mut props| {
-										props.child("1", Dynamic).run("a", |mut props| {
-											props.set_attribute("href", "#");
-											props.styles(&[Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
-											
-											props.child("0", Label).run(|props| props.text("Engagement"));
-											props.child("1", Dynamic).run("span", |mut props| {
-												props.styles(&[Style::Noop("absolute"), Style::Noop("inset-0")]);
+										props.child("3", Dynamic).run("span", |mut props| {
+											props.child("0", Dynamic).run("strong", |mut props| {
+												props.styles(vec![Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
+												
+												props.child("0", Label).run(|props| props.text("SSL certificates."));
 											});
-										});
-										props.child("3", Dynamic).run("p", |mut props| {
-											props.styles(&[Style::MarginTop(Size::Exact(4)), Style::TextColor(Color::Fg(67))]);
-											
-											props.child("0", Label).run(|props| props.text("Speak directly to your customers"));
+											props.child("1", Label).run(|props| props.text("Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo."));
 										});
 									});
-								});
-								props.child("5", Dynamic).run("div", |mut props| {
-									props.styles(&[Style::Noop("group"), Style::Noop("relative"), Style::Flex, Style::Noop("gap-x-6"), Style::Noop("rounded-lg"), Style::Padding(Size::Exact(16)), Style::OnHover(&[Style::Color(Color::Fg(6))])]);
-									
-									props.child("1", Dynamic).run("div", |mut props| {
-										props.styles(&[Style::MarginTop(Size::Exact(4)), Style::Flex, Style::Width(Size::Exact(44)), Style::Width(Size::Exact(44)), Style::Noop("flex-none"), Style::ItemsCenter, Style::JustifyCenter, Style::Noop("rounded-lg"), Style::Color(Color::Fg(6)), Style::NoopGroup("group-hover", &[Style::Noop("bg-white")])]);
+									props.child("5", Dynamic).run("li", |mut props| {
+										props.styles(vec![Style::Flex, Style::Noop("gap-x-3")]);
 										
-										props.child("1", Icon).run(|mut props| {
-											props.style(&[Style::Width(Size::Exact(24)), Style::Width(Size::Exact(24)), Style::TextColor(Color::Fg(67)), Style::NoopGroup("group-hover", &[Style::Noop("text-indigo-600")])]);
+										props.child("1", Icon).run(|props| {
+											props.style(vec![Style::MarginTop(Size::Exact(4)), Style::Width(Size::Exact(20)), Style::Width(Size::Exact(20)), Style::Noop("flex-none"), Style::Noop("text-indigo-600")]);
 										});
-									});
-									props.child("3", Dynamic).run("div", |mut props| {
-										props.child("1", Dynamic).run("a", |mut props| {
-											props.set_attribute("href", "#");
-											props.styles(&[Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
-											
-											props.child("0", Label).run(|props| props.text("Security"));
-											props.child("1", Dynamic).run("span", |mut props| {
-												props.styles(&[Style::Noop("absolute"), Style::Noop("inset-0")]);
+										props.child("3", Dynamic).run("span", |mut props| {
+											props.child("0", Dynamic).run("strong", |mut props| {
+												props.styles(vec![Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
+												
+												props.child("0", Label).run(|props| props.text("Database backups."));
 											});
-										});
-										props.child("3", Dynamic).run("p", |mut props| {
-											props.styles(&[Style::MarginTop(Size::Exact(4)), Style::TextColor(Color::Fg(67))]);
-											
-											props.child("0", Label).run(|props| props.text("Your customers' data will be safe and secure"));
+											props.child("1", Label).run(|props| props.text("Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis."));
 										});
 									});
 								});
-								props.child("7", Dynamic).run("div", |mut props| {
-									props.styles(&[Style::Noop("group"), Style::Noop("relative"), Style::Flex, Style::Noop("gap-x-6"), Style::Noop("rounded-lg"), Style::Padding(Size::Exact(16)), Style::OnHover(&[Style::Color(Color::Fg(6))])]);
+								props.child("5", Dynamic).run("p", |mut props| {
+									props.styles(vec![Style::MarginTop(Size::Exact(32))]);
 									
-									props.child("1", Dynamic).run("div", |mut props| {
-										props.styles(&[Style::MarginTop(Size::Exact(4)), Style::Flex, Style::Width(Size::Exact(44)), Style::Width(Size::Exact(44)), Style::Noop("flex-none"), Style::ItemsCenter, Style::JustifyCenter, Style::Noop("rounded-lg"), Style::Color(Color::Fg(6)), Style::NoopGroup("group-hover", &[Style::Noop("bg-white")])]);
-										
-										props.child("1", Icon).run(|mut props| {
-											props.style(&[Style::Width(Size::Exact(24)), Style::Width(Size::Exact(24)), Style::TextColor(Color::Fg(67)), Style::NoopGroup("group-hover", &[Style::Noop("text-indigo-600")])]);
-										});
-									});
-									props.child("3", Dynamic).run("div", |mut props| {
-										props.child("1", Dynamic).run("a", |mut props| {
-											props.set_attribute("href", "#");
-											props.styles(&[Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
-											
-											props.child("0", Label).run(|props| props.text("Integrations"));
-											props.child("1", Dynamic).run("span", |mut props| {
-												props.styles(&[Style::Noop("absolute"), Style::Noop("inset-0")]);
-											});
-										});
-										props.child("3", Dynamic).run("p", |mut props| {
-											props.styles(&[Style::MarginTop(Size::Exact(4)), Style::TextColor(Color::Fg(67))]);
-											
-											props.child("0", Label).run(|props| props.text("Connect with third-party tools"));
-										});
-									});
+									props.child("0", Label).run(|props| props.text("Et vitae blandit facilisi magna lacus commodo. Vitae sapien duis odio id et. Id blandit molestie auctor fermentum dignissim. Lacus diam tincidunt ac cursus in vel. Mauris varius vulputate et ultrices hac adipiscing egestas. Iaculis convallis ac tempor et ut. Ac lorem vel integer orci."));
 								});
-								props.child("9", Dynamic).run("div", |mut props| {
-									props.styles(&[Style::Noop("group"), Style::Noop("relative"), Style::Flex, Style::Noop("gap-x-6"), Style::Noop("rounded-lg"), Style::Padding(Size::Exact(16)), Style::OnHover(&[Style::Color(Color::Fg(6))])]);
+								props.child("7", Dynamic).run("h2", |mut props| {
+									props.styles(vec![Style::MarginTop(Size::Exact(64)), Style::Noop("text-2xl"), Style::FontBold, Style::Noop("tracking-tight"), Style::TextColor(Color::Fg(100))]);
 									
-									props.child("1", Dynamic).run("div", |mut props| {
-										props.styles(&[Style::MarginTop(Size::Exact(4)), Style::Flex, Style::Width(Size::Exact(44)), Style::Width(Size::Exact(44)), Style::Noop("flex-none"), Style::ItemsCenter, Style::JustifyCenter, Style::Noop("rounded-lg"), Style::Color(Color::Fg(6)), Style::NoopGroup("group-hover", &[Style::Noop("bg-white")])]);
-										
-										props.child("1", Icon).run(|mut props| {
-											props.style(&[Style::Width(Size::Exact(24)), Style::Width(Size::Exact(24)), Style::TextColor(Color::Fg(67)), Style::NoopGroup("group-hover", &[Style::Noop("text-indigo-600")])]);
-										});
-									});
-									props.child("3", Dynamic).run("div", |mut props| {
-										props.child("1", Dynamic).run("a", |mut props| {
-											props.set_attribute("href", "#");
-											props.styles(&[Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
-											
-											props.child("0", Label).run(|props| props.text("Automations"));
-											props.child("1", Dynamic).run("span", |mut props| {
-												props.styles(&[Style::Noop("absolute"), Style::Noop("inset-0")]);
-											});
-										});
-										props.child("3", Dynamic).run("p", |mut props| {
-											props.styles(&[Style::MarginTop(Size::Exact(4)), Style::TextColor(Color::Fg(67))]);
-											
-											props.child("0", Label).run(|props| props.text("Build strategic funnels that will convert"));
-										});
-									});
+									props.child("0", Label).run(|props| props.text("No server? No problem."));
 								});
-							});
-							props.child("3", Dynamic).run("div", |mut props| {
-								props.styles(&[Style::Noop("grid"), Style::Noop("grid-cols-2"), Style::Noop("divide-x"), Style::Noop("divide-gray-900/5"), Style::Color(Color::Fg(6))]);
-								
-								props.child("1", Dynamic).run("a", |mut props| {
-									props.set_attribute("href", "#");
-									props.styles(&[Style::Flex, Style::ItemsCenter, Style::JustifyCenter, Style::Noop("gap-x-2.5"), Style::Padding(Size::Exact(12)), Style::FontSemibold, Style::TextColor(Color::Fg(100)), Style::OnHover(&[Style::Color(Color::Fg(11))])]);
+								props.child("9", Dynamic).run("p", |mut props| {
+									props.styles(vec![Style::MarginTop(Size::Exact(24))]);
 									
-									props.child("1", Icon).run(|mut props| {
-										props.style(&[Style::Width(Size::Exact(20)), Style::Width(Size::Exact(20)), Style::Noop("flex-none"), Style::TextColor(Color::Fg(44))]);
-									});
-									props.child("2", Label).run(|props| props.text("Watch demo"));
-								});
-								props.child("3", Dynamic).run("a", |mut props| {
-									props.set_attribute("href", "#");
-									props.styles(&[Style::Flex, Style::ItemsCenter, Style::JustifyCenter, Style::Noop("gap-x-2.5"), Style::Padding(Size::Exact(12)), Style::FontSemibold, Style::TextColor(Color::Fg(100)), Style::OnHover(&[Style::Color(Color::Fg(11))])]);
-									
-									props.child("1", Icon).run(|mut props| {
-										props.style(&[Style::Width(Size::Exact(20)), Style::Width(Size::Exact(20)), Style::Noop("flex-none"), Style::TextColor(Color::Fg(44))]);
-									});
-									props.child("2", Label).run(|props| props.text("Contact sales"));
+									props.child("0", Label).run(|props| props.text("Id orci tellus laoreet id ac. Dolor, aenean leo, ac etiam consequat in. Convallis arcu ipsum urna nibh. Pharetra, euismod vitae interdum mauris enim, consequat vulputate nibh. Maecenas pellentesque id sed tellus mauris, ultrices mauris. Tincidunt enim cursus ridiculus mi. Pellentesque nam sed nullam sed diam turpis ipsum eu a sed convallis diam."));
 								});
 							});
 						});

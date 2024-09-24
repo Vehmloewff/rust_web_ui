@@ -13,139 +13,141 @@ impl Default for Example32Props {
 impl Widget<'_> for Example32 {
 	type Props = Example32Props;
 
-	fn render(mut ctx: Ctx<'_>, props: Example32Props) {
-		ctx.styles(&[Style::Noop("")]);
+	fn render(mut ctx: Ctx<'_>, _props: Example32Props) {
+		ctx.styles(vec![Style::Noop("")]);
 		ctx.set_attribute("style", "");
 		
 		ctx.child("1", Dynamic).run("div", |mut props| {
-			props.styles(&[Style::OnScreen(Screen::Large, &[Style::Noop("h-[985px]")]), Style::OnScreen(Screen::Large, &[Style::Noop("overflow-y-auto")])]);
+			props.styles(vec![Style::Noop("relative"), Style::Noop("isolate"), Style::Noop("overflow-hidden"), Style::Color(Color::Fg(100)), Style::PaddingY(Size::Exact(96)), Style::OnScreen(Screen::Small, &[Style::PaddingY(Size::Exact(128))])]);
 			
-			props.child("1", Dynamic).run("div", |mut props| {
-				props.styles(&[Style::Noop("relative"), Style::Noop("isolate"), Style::Noop("overflow-hidden"), Style::Noop("bg-white"), Style::PaddingX(Size::Exact(24)), Style::PaddingY(Size::Exact(96)), Style::OnScreen(Screen::Small, &[Style::PaddingY(Size::Exact(128))]), Style::OnScreen(Screen::Large, &[Style::Noop("overflow-visible")]), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(0))])]);
+			props.child("1", Dynamic).run("img", |mut props| {
+				props.set_attribute("src", "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&crop=focalpoint&fp-y=.8&w=2830&h=1500&q=80&blend=111827&sat=-100&exp=15&blend-mode=multiply");
+				props.set_attribute("alt", "");
+				props.styles(vec![Style::Noop("absolute"), Style::Noop("inset-0"), Style::Noop("-z-10"), Style::Width(Size::Full), Style::Width(Size::Full), Style::Noop("object-cover"), Style::Noop("object-right"), Style::OnScreen(Screen::Medium, &[Style::Noop("object-center")])]);
+			});
+			props.child("3", Dynamic).run("div", |mut props| {
+				props.styles(vec![Style::Noop("hidden"), Style::OnScreen(Screen::Small, &[Style::Noop("absolute")]), Style::OnScreen(Screen::Small, &[Style::Noop("-top-10")]), Style::OnScreen(Screen::Small, &[Style::Noop("right-1/2")]), Style::OnScreen(Screen::Small, &[Style::Noop("-z-10")]), Style::OnScreen(Screen::Small, &[Style::MarginRight(Size::Exact(40))]), Style::OnScreen(Screen::Small, &[Style::Block]), Style::OnScreen(Screen::Small, &[Style::Noop("transform-gpu")]), Style::OnScreen(Screen::Small, &[Style::Noop("blur-3xl")])]);
+				props.set_attribute("aria-hidden", "true");
 				
 				props.child("1", Dynamic).run("div", |mut props| {
-					props.styles(&[Style::Noop("absolute"), Style::Noop("inset-0"), Style::Noop("-z-10"), Style::Noop("overflow-hidden")]);
+					props.styles(vec![Style::Noop("aspect-[1097/845]"), Style::Noop("w-[68.5625rem]"), Style::Noop("bg-gradient-to-tr"), Style::Noop("from-[#ff4694]"), Style::Noop("to-[#776fff]"), Style::Noop("opacity-20")]);
+					props.set_attribute("style", "clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)");
+				});
+			});
+			props.child("5", Dynamic).run("div", |mut props| {
+				props.styles(vec![Style::Noop("absolute"), Style::Noop("-top-52"), Style::Noop("left-1/2"), Style::Noop("-z-10"), Style::Noop("-translate-x-1/2"), Style::Noop("transform-gpu"), Style::Noop("blur-3xl"), Style::OnScreen(Screen::Small, &[Style::Noop("top-[-28rem]")]), Style::OnScreen(Screen::Small, &[Style::MarginLeft(Size::Exact(64))]), Style::OnScreen(Screen::Small, &[Style::Noop("translate-x-0")]), Style::OnScreen(Screen::Small, &[Style::Noop("transform-gpu")])]);
+				props.set_attribute("aria-hidden", "true");
+				
+				props.child("1", Dynamic).run("div", |mut props| {
+					props.styles(vec![Style::Noop("aspect-[1097/845]"), Style::Noop("w-[68.5625rem]"), Style::Noop("bg-gradient-to-tr"), Style::Noop("from-[#ff4694]"), Style::Noop("to-[#776fff]"), Style::Noop("opacity-20")]);
+					props.set_attribute("style", "clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)");
+				});
+			});
+			props.child("7", Dynamic).run("div", |mut props| {
+				props.styles(vec![Style::Noop("mx-auto"), Style::Noop("max-w-7xl"), Style::PaddingX(Size::Exact(24)), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(32))])]);
+				
+				props.child("1", Dynamic).run("div", |mut props| {
+					props.styles(vec![Style::Noop("mx-auto"), Style::Noop("max-w-2xl"), Style::OnScreen(Screen::Large, &[Style::MarginX(Size::Exact(0))])]);
 					
-					props.child("1", Icon).run(|mut props| {
-						props.style(&[Style::Noop("absolute"), Style::Noop("left-[max(50%,25rem)]"), Style::Noop("top-0"), Style::Noop("h-[64rem]"), Style::Noop("w-[128rem]"), Style::Noop("-translate-x-1/2"), Style::Noop("stroke-gray-200"), Style::NoopGroup("[mask-image", &[Style::Noop("radial-gradient(64rem_64rem_at_top,white,transparent)]")])]);
+					props.child("1", Dynamic).run("h2", |mut props| {
+						props.styles(vec![Style::Noop("text-4xl"), Style::FontBold, Style::Noop("tracking-tight"), Style::Noop("text-white"), Style::OnScreen(Screen::Small, &[Style::Noop("text-6xl")])]);
+						
+						props.child("0", Label).run(|props| props.text("Work with us"));
+					});
+					props.child("3", Dynamic).run("p", |mut props| {
+						props.styles(vec![Style::MarginTop(Size::Exact(24)), Style::Noop("text-lg"), Style::Noop("leading-8"), Style::TextColor(Color::Fg(33))]);
+						
+						props.child("0", Label).run(|props| props.text("Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua."));
 					});
 				});
 				props.child("3", Dynamic).run("div", |mut props| {
-					props.styles(&[Style::Noop("mx-auto"), Style::Noop("grid"), Style::Noop("max-w-2xl"), Style::Noop("grid-cols-1"), Style::Noop("gap-x-8"), Style::Noop("gap-y-16"), Style::OnScreen(Screen::Large, &[Style::MarginX(Size::Exact(0))]), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-none")]), Style::OnScreen(Screen::Large, &[Style::Noop("grid-cols-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("items-start")]), Style::OnScreen(Screen::Large, &[Style::Noop("gap-y-10")])]);
+					props.styles(vec![Style::Noop("mx-auto"), Style::MarginTop(Size::Exact(40)), Style::Noop("max-w-2xl"), Style::OnScreen(Screen::Large, &[Style::MarginX(Size::Exact(0))]), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-none")])]);
 					
 					props.child("1", Dynamic).run("div", |mut props| {
-						props.styles(&[Style::OnScreen(Screen::Large, &[Style::Noop("col-span-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("col-start-1")]), Style::OnScreen(Screen::Large, &[Style::Noop("row-start-1")]), Style::OnScreen(Screen::Large, &[Style::Noop("mx-auto")]), Style::OnScreen(Screen::Large, &[Style::Noop("grid")]), Style::OnScreen(Screen::Large, &[Style::Width(Size::Full)]), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-7xl")]), Style::OnScreen(Screen::Large, &[Style::Noop("grid-cols-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("gap-x-8")]), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(32))])]);
+						props.styles(vec![Style::Noop("grid"), Style::Noop("grid-cols-1"), Style::Noop("gap-x-8"), Style::Noop("gap-y-6"), Style::Noop("text-base"), Style::FontSemibold, Style::Noop("leading-7"), Style::Noop("text-white"), Style::OnScreen(Screen::Small, &[Style::Noop("grid-cols-2")]), Style::OnScreen(Screen::Medium, &[Style::Flex]), Style::OnScreen(Screen::Large, &[Style::Noop("gap-x-10")])]);
+						
+						props.child("1", Dynamic).run("a", |mut props| {
+							props.set_attribute("href", "#");
+							
+							props.child("0", Label).run(|props| props.text("Open roles"));
+							props.child("1", Dynamic).run("span", |_| {});
+						});
+						props.child("3", Dynamic).run("a", |mut props| {
+							props.set_attribute("href", "#");
+							
+							props.child("0", Label).run(|props| props.text("Internship program"));
+							props.child("1", Dynamic).run("span", |_| {});
+						});
+						props.child("5", Dynamic).run("a", |mut props| {
+							props.set_attribute("href", "#");
+							
+							props.child("0", Label).run(|props| props.text("Our values"));
+							props.child("1", Dynamic).run("span", |_| {});
+						});
+						props.child("7", Dynamic).run("a", |mut props| {
+							props.set_attribute("href", "#");
+							
+							props.child("0", Label).run(|props| props.text("Meet our leadership"));
+							props.child("1", Dynamic).run("span", |_| {});
+						});
+					});
+					props.child("3", Dynamic).run("dl", |mut props| {
+						props.styles(vec![Style::MarginTop(Size::Exact(64)), Style::Noop("grid"), Style::Noop("grid-cols-1"), Style::Noop("gap-8"), Style::OnScreen(Screen::Small, &[Style::MarginTop(Size::Exact(80))]), Style::OnScreen(Screen::Small, &[Style::Noop("grid-cols-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("grid-cols-4")])]);
 						
 						props.child("1", Dynamic).run("div", |mut props| {
-							props.styles(&[Style::OnScreen(Screen::Large, &[Style::PaddingRight(Size::Exact(16))])]);
+							props.styles(vec![Style::Flex, Style::Noop("flex-col-reverse")]);
 							
-							props.child("1", Dynamic).run("div", |mut props| {
-								props.styles(&[Style::OnScreen(Screen::Large, &[Style::Noop("max-w-lg")])]);
+							props.child("1", Dynamic).run("dt", |mut props| {
+								props.styles(vec![Style::Noop("text-base"), Style::Noop("leading-7"), Style::TextColor(Color::Fg(33))]);
 								
-								props.child("1", Dynamic).run("p", |mut props| {
-									props.styles(&[Style::Noop("text-base"), Style::FontSemibold, Style::Noop("leading-7"), Style::Noop("text-indigo-600")]);
-									
-									props.child("0", Label).run(|props| props.text("Deploy faster"));
-								});
-								props.child("3", Dynamic).run("h1", |mut props| {
-									props.styles(&[Style::MarginTop(Size::Exact(8)), Style::Noop("text-3xl"), Style::FontBold, Style::Noop("tracking-tight"), Style::TextColor(Color::Fg(100)), Style::OnScreen(Screen::Small, &[Style::Noop("text-4xl")])]);
-									
-									props.child("0", Label).run(|props| props.text("A better workflow"));
-								});
-								props.child("5", Dynamic).run("p", |mut props| {
-									props.styles(&[Style::MarginTop(Size::Exact(24)), Style::Noop("text-xl"), Style::Noop("leading-8"), Style::TextColor(Color::Fg(78))]);
-									
-									props.child("0", Label).run(|props| props.text("Aliquet nec orci mattis amet quisque ullamcorper neque, nibh sem. At arcu, sit dui mi, nibh dui, diam eget aliquam. Quisque id at vitae feugiat egestas."));
-								});
+								props.child("0", Label).run(|props| props.text("Offices worldwide"));
+							});
+							props.child("3", Dynamic).run("dd", |mut props| {
+								props.styles(vec![Style::Noop("text-2xl"), Style::FontBold, Style::Noop("leading-9"), Style::Noop("tracking-tight"), Style::Noop("text-white")]);
+								
+								props.child("0", Label).run(|props| props.text("12"));
 							});
 						});
-					});
-					props.child("3", Dynamic).run("div", |mut props| {
-						props.styles(&[Style::Noop("-ml-12"), Style::Noop("-mt-12"), Style::Padding(Size::Exact(48)), Style::OnScreen(Screen::Large, &[Style::Noop("sticky")]), Style::OnScreen(Screen::Large, &[Style::Noop("top-4")]), Style::OnScreen(Screen::Large, &[Style::Noop("col-start-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("row-span-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("row-start-1")]), Style::OnScreen(Screen::Large, &[Style::Noop("overflow-hidden")])]);
-						
-						props.child("1", Dynamic).run("img", |mut props| {
-							props.styles(&[Style::Noop("w-[48rem]"), Style::Noop("max-w-none"), Style::Noop("rounded-xl"), Style::Color(Color::Fg(100)), Style::Noop("shadow-xl"), Style::Noop("ring-1"), Style::Noop("ring-gray-400/10"), Style::OnScreen(Screen::Small, &[Style::Noop("w-[57rem]")])]);
-							props.set_attribute("src", "https://tailwindui.com/img/component-images/dark-project-app-screenshot.png");
-							props.set_attribute("alt", "");
-						});
-					});
-					props.child("5", Dynamic).run("div", |mut props| {
-						props.styles(&[Style::OnScreen(Screen::Large, &[Style::Noop("col-span-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("col-start-1")]), Style::OnScreen(Screen::Large, &[Style::Noop("row-start-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("mx-auto")]), Style::OnScreen(Screen::Large, &[Style::Noop("grid")]), Style::OnScreen(Screen::Large, &[Style::Width(Size::Full)]), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-7xl")]), Style::OnScreen(Screen::Large, &[Style::Noop("grid-cols-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("gap-x-8")]), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(32))])]);
-						
-						props.child("1", Dynamic).run("div", |mut props| {
-							props.styles(&[Style::OnScreen(Screen::Large, &[Style::PaddingRight(Size::Exact(16))])]);
+						props.child("3", Dynamic).run("div", |mut props| {
+							props.styles(vec![Style::Flex, Style::Noop("flex-col-reverse")]);
 							
-							props.child("1", Dynamic).run("div", |mut props| {
-								props.styles(&[Style::Noop("max-w-xl"), Style::Noop("text-base"), Style::Noop("leading-7"), Style::TextColor(Color::Fg(78)), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-lg")])]);
+							props.child("1", Dynamic).run("dt", |mut props| {
+								props.styles(vec![Style::Noop("text-base"), Style::Noop("leading-7"), Style::TextColor(Color::Fg(33))]);
 								
-								props.child("1", Dynamic).run("p", |mut props| {
-									props.child("0", Label).run(|props| props.text("Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris semper sed amet vitae sed turpis id. Id dolor praesent donec est. Odio penatibus risus viverra tellus varius sit neque erat velit. Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris semper sed amet vitae sed turpis id."));
-								});
-								props.child("3", Dynamic).run("ul", |mut props| {
-									props.set_attribute("role", "list");
-									props.styles(&[Style::MarginTop(Size::Exact(32)), Style::SpaceY(Size::Exact(32)), Style::TextColor(Color::Fg(67))]);
-									
-									props.child("1", Dynamic).run("li", |mut props| {
-										props.styles(&[Style::Flex, Style::Noop("gap-x-3")]);
-										
-										props.child("1", Icon).run(|mut props| {
-											props.style(&[Style::MarginTop(Size::Exact(4)), Style::Width(Size::Exact(20)), Style::Width(Size::Exact(20)), Style::Noop("flex-none"), Style::Noop("text-indigo-600")]);
-										});
-										props.child("3", Dynamic).run("span", |mut props| {
-											props.child("0", Dynamic).run("strong", |mut props| {
-												props.styles(&[Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
-												
-												props.child("0", Label).run(|props| props.text("Push to deploy."));
-											});
-											props.child("1", Label).run(|props| props.text("Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione."));
-										});
-									});
-									props.child("3", Dynamic).run("li", |mut props| {
-										props.styles(&[Style::Flex, Style::Noop("gap-x-3")]);
-										
-										props.child("1", Icon).run(|mut props| {
-											props.style(&[Style::MarginTop(Size::Exact(4)), Style::Width(Size::Exact(20)), Style::Width(Size::Exact(20)), Style::Noop("flex-none"), Style::Noop("text-indigo-600")]);
-										});
-										props.child("3", Dynamic).run("span", |mut props| {
-											props.child("0", Dynamic).run("strong", |mut props| {
-												props.styles(&[Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
-												
-												props.child("0", Label).run(|props| props.text("SSL certificates."));
-											});
-											props.child("1", Label).run(|props| props.text("Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo."));
-										});
-									});
-									props.child("5", Dynamic).run("li", |mut props| {
-										props.styles(&[Style::Flex, Style::Noop("gap-x-3")]);
-										
-										props.child("1", Icon).run(|mut props| {
-											props.style(&[Style::MarginTop(Size::Exact(4)), Style::Width(Size::Exact(20)), Style::Width(Size::Exact(20)), Style::Noop("flex-none"), Style::Noop("text-indigo-600")]);
-										});
-										props.child("3", Dynamic).run("span", |mut props| {
-											props.child("0", Dynamic).run("strong", |mut props| {
-												props.styles(&[Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
-												
-												props.child("0", Label).run(|props| props.text("Database backups."));
-											});
-											props.child("1", Label).run(|props| props.text("Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis."));
-										});
-									});
-								});
-								props.child("5", Dynamic).run("p", |mut props| {
-									props.styles(&[Style::MarginTop(Size::Exact(32))]);
-									
-									props.child("0", Label).run(|props| props.text("Et vitae blandit facilisi magna lacus commodo. Vitae sapien duis odio id et. Id blandit molestie auctor fermentum dignissim. Lacus diam tincidunt ac cursus in vel. Mauris varius vulputate et ultrices hac adipiscing egestas. Iaculis convallis ac tempor et ut. Ac lorem vel integer orci."));
-								});
-								props.child("7", Dynamic).run("h2", |mut props| {
-									props.styles(&[Style::MarginTop(Size::Exact(64)), Style::Noop("text-2xl"), Style::FontBold, Style::Noop("tracking-tight"), Style::TextColor(Color::Fg(100))]);
-									
-									props.child("0", Label).run(|props| props.text("No server? No problem."));
-								});
-								props.child("9", Dynamic).run("p", |mut props| {
-									props.styles(&[Style::MarginTop(Size::Exact(24))]);
-									
-									props.child("0", Label).run(|props| props.text("Id orci tellus laoreet id ac. Dolor, aenean leo, ac etiam consequat in. Convallis arcu ipsum urna nibh. Pharetra, euismod vitae interdum mauris enim, consequat vulputate nibh. Maecenas pellentesque id sed tellus mauris, ultrices mauris. Tincidunt enim cursus ridiculus mi. Pellentesque nam sed nullam sed diam turpis ipsum eu a sed convallis diam."));
-								});
+								props.child("0", Label).run(|props| props.text("Full-time colleagues"));
+							});
+							props.child("3", Dynamic).run("dd", |mut props| {
+								props.styles(vec![Style::Noop("text-2xl"), Style::FontBold, Style::Noop("leading-9"), Style::Noop("tracking-tight"), Style::Noop("text-white")]);
+								
+								props.child("0", Label).run(|props| props.text("300+"));
+							});
+						});
+						props.child("5", Dynamic).run("div", |mut props| {
+							props.styles(vec![Style::Flex, Style::Noop("flex-col-reverse")]);
+							
+							props.child("1", Dynamic).run("dt", |mut props| {
+								props.styles(vec![Style::Noop("text-base"), Style::Noop("leading-7"), Style::TextColor(Color::Fg(33))]);
+								
+								props.child("0", Label).run(|props| props.text("Hours per week"));
+							});
+							props.child("3", Dynamic).run("dd", |mut props| {
+								props.styles(vec![Style::Noop("text-2xl"), Style::FontBold, Style::Noop("leading-9"), Style::Noop("tracking-tight"), Style::Noop("text-white")]);
+								
+								props.child("0", Label).run(|props| props.text("40"));
+							});
+						});
+						props.child("7", Dynamic).run("div", |mut props| {
+							props.styles(vec![Style::Flex, Style::Noop("flex-col-reverse")]);
+							
+							props.child("1", Dynamic).run("dt", |mut props| {
+								props.styles(vec![Style::Noop("text-base"), Style::Noop("leading-7"), Style::TextColor(Color::Fg(33))]);
+								
+								props.child("0", Label).run(|props| props.text("Paid time off"));
+							});
+							props.child("3", Dynamic).run("dd", |mut props| {
+								props.styles(vec![Style::Noop("text-2xl"), Style::FontBold, Style::Noop("leading-9"), Style::Noop("tracking-tight"), Style::Noop("text-white")]);
+								
+								props.child("0", Label).run(|props| props.text("Unlimited"));
 							});
 						});
 					});

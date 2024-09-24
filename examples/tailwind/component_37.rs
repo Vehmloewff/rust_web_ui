@@ -13,62 +13,58 @@ impl Default for Example37Props {
 impl Widget<'_> for Example37 {
 	type Props = Example37Props;
 
-	fn render(mut ctx: Ctx<'_>, props: Example37Props) {
-		ctx.styles(&[Style::Noop("")]);
+	fn render(mut ctx: Ctx<'_>, _props: Example37Props) {
+		ctx.styles(vec![Style::Noop("")]);
 		ctx.set_attribute("style", "");
 		
 		ctx.child("1", Dynamic).run("div", |mut props| {
-			props.styles(&[Style::Width(Size::Exact(0)), Style::Noop("min-h-[768px]"), Style::Noop("bg-white")]);
+			props.styles(vec![Style::Noop("bg-white"), Style::PaddingY(Size::Exact(96)), Style::OnScreen(Screen::Small, &[Style::PaddingY(Size::Exact(128))])]);
 			
-			// 
-			//   This example requires updating your template:
-			// 
-			//   ```
-			//   <html class="h-full">
-			//   <body class="h-full">
-			//   ```
-			//   
-			props.child("3", Dynamic).run("main", |mut props| {
-				props.styles(&[Style::Noop("grid"), Style::Noop("min-h-full"), Style::Noop("place-items-center"), Style::Noop("bg-white"), Style::PaddingX(Size::Exact(24)), Style::PaddingY(Size::Exact(96)), Style::OnScreen(Screen::Small, &[Style::PaddingY(Size::Exact(128))]), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(32))])]);
+			props.child("1", Dynamic).run("div", |mut props| {
+				props.styles(vec![Style::Noop("mx-auto"), Style::Noop("max-w-7xl"), Style::PaddingX(Size::Exact(24)), Style::OnScreen(Screen::Large, &[Style::PaddingX(Size::Exact(32))])]);
 				
-				props.child("1", Dynamic).run("div", |mut props| {
-					props.styles(&[Style::Noop("text-center")]);
+				props.child("1", Dynamic).run("h2", |mut props| {
+					props.styles(vec![Style::Noop("text-center"), Style::Noop("text-lg"), Style::FontSemibold, Style::Noop("leading-8"), Style::TextColor(Color::Fg(100))]);
 					
-					props.child("1", Dynamic).run("p", |mut props| {
-						props.styles(&[Style::Noop("text-base"), Style::FontSemibold, Style::Noop("text-indigo-600")]);
-						
-						props.child("0", Label).run(|props| props.text("404"));
+					props.child("0", Label).run(|props| props.text("Trusted by the world’s most innovative teams"));
+				});
+				props.child("3", Dynamic).run("div", |mut props| {
+					props.styles(vec![Style::Noop("mx-auto"), Style::MarginTop(Size::Exact(40)), Style::Noop("grid"), Style::Noop("max-w-lg"), Style::Noop("grid-cols-4"), Style::ItemsCenter, Style::Noop("gap-x-8"), Style::Noop("gap-y-10"), Style::OnScreen(Screen::Small, &[Style::Noop("max-w-xl")]), Style::OnScreen(Screen::Small, &[Style::Noop("grid-cols-6")]), Style::OnScreen(Screen::Small, &[Style::Noop("gap-x-10")]), Style::OnScreen(Screen::Large, &[Style::MarginX(Size::Exact(0))]), Style::OnScreen(Screen::Large, &[Style::Noop("max-w-none")]), Style::OnScreen(Screen::Large, &[Style::Noop("grid-cols-5")])]);
+					
+					props.child("1", Dynamic).run("img", |mut props| {
+						props.styles(vec![Style::Noop("col-span-2"), Style::Noop("max-h-12"), Style::Width(Size::Full), Style::Noop("object-contain"), Style::OnScreen(Screen::Large, &[Style::Noop("col-span-1")])]);
+						props.set_attribute("src", "https://tailwindui.com/img/logos/158x48/transistor-logo-gray-900.svg");
+						props.set_attribute("alt", "Transistor");
+						props.set_attribute("width", "158");
+						props.set_attribute("height", "48");
 					});
-					props.child("3", Dynamic).run("h1", |mut props| {
-						props.styles(&[Style::MarginTop(Size::Exact(16)), Style::Noop("text-3xl"), Style::FontBold, Style::Noop("tracking-tight"), Style::TextColor(Color::Fg(100)), Style::OnScreen(Screen::Small, &[Style::Noop("text-5xl")])]);
-						
-						props.child("0", Label).run(|props| props.text("Page not found"));
+					props.child("3", Dynamic).run("img", |mut props| {
+						props.styles(vec![Style::Noop("col-span-2"), Style::Noop("max-h-12"), Style::Width(Size::Full), Style::Noop("object-contain"), Style::OnScreen(Screen::Large, &[Style::Noop("col-span-1")])]);
+						props.set_attribute("src", "https://tailwindui.com/img/logos/158x48/reform-logo-gray-900.svg");
+						props.set_attribute("alt", "Reform");
+						props.set_attribute("width", "158");
+						props.set_attribute("height", "48");
 					});
-					props.child("5", Dynamic).run("p", |mut props| {
-						props.styles(&[Style::MarginTop(Size::Exact(24)), Style::Noop("text-base"), Style::Noop("leading-7"), Style::TextColor(Color::Fg(67))]);
-						
-						props.child("0", Label).run(|props| props.text("Sorry, we couldn’t find the page you’re looking for."));
+					props.child("5", Dynamic).run("img", |mut props| {
+						props.styles(vec![Style::Noop("col-span-2"), Style::Noop("max-h-12"), Style::Width(Size::Full), Style::Noop("object-contain"), Style::OnScreen(Screen::Large, &[Style::Noop("col-span-1")])]);
+						props.set_attribute("src", "https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg");
+						props.set_attribute("alt", "Tuple");
+						props.set_attribute("width", "158");
+						props.set_attribute("height", "48");
 					});
-					props.child("7", Dynamic).run("div", |mut props| {
-						props.styles(&[Style::MarginTop(Size::Exact(40)), Style::Flex, Style::ItemsCenter, Style::JustifyCenter, Style::Noop("gap-x-6")]);
-						
-						props.child("1", Dynamic).run("a", |mut props| {
-							props.set_attribute("href", "#");
-							props.styles(&[Style::Noop("rounded-md"), Style::Noop("bg-indigo-600"), Style::PaddingX(Size::Exact(14)), Style::PaddingY(Size::Exact(10)), Style::Noop("text-sm"), Style::FontSemibold, Style::Noop("text-white"), Style::Noop("shadow-sm"), Style::OnHover(&[Style::Noop("bg-indigo-500")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-2")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-offset-2")]), Style::NoopGroup("focus-visible", &[Style::Noop("outline-indigo-600")])]);
-							
-							props.child("0", Label).run(|props| props.text("Go back home"));
-						});
-						props.child("3", Dynamic).run("a", |mut props| {
-							props.set_attribute("href", "#");
-							props.styles(&[Style::Noop("text-sm"), Style::FontSemibold, Style::TextColor(Color::Fg(100))]);
-							
-							props.child("0", Label).run(|props| props.text("Contact support"));
-							props.child("1", Dynamic).run("span", |mut props| {
-								props.set_attribute("aria-hidden", "true");
-								
-								props.child("0", Label).run(|props| props.text("→"));
-							});
-						});
+					props.child("7", Dynamic).run("img", |mut props| {
+						props.styles(vec![Style::Noop("col-span-2"), Style::Noop("max-h-12"), Style::Width(Size::Full), Style::Noop("object-contain"), Style::OnScreen(Screen::Small, &[Style::Noop("col-start-2")]), Style::OnScreen(Screen::Large, &[Style::Noop("col-span-1")])]);
+						props.set_attribute("src", "https://tailwindui.com/img/logos/158x48/savvycal-logo-gray-900.svg");
+						props.set_attribute("alt", "SavvyCal");
+						props.set_attribute("width", "158");
+						props.set_attribute("height", "48");
+					});
+					props.child("9", Dynamic).run("img", |mut props| {
+						props.styles(vec![Style::Noop("col-span-2"), Style::Noop("col-start-2"), Style::Noop("max-h-12"), Style::Width(Size::Full), Style::Noop("object-contain"), Style::OnScreen(Screen::Small, &[Style::Noop("col-start-auto")]), Style::OnScreen(Screen::Large, &[Style::Noop("col-span-1")])]);
+						props.set_attribute("src", "https://tailwindui.com/img/logos/158x48/statamic-logo-gray-900.svg");
+						props.set_attribute("alt", "Statamic");
+						props.set_attribute("width", "158");
+						props.set_attribute("height", "48");
 					});
 				});
 			});

@@ -97,7 +97,7 @@ impl Default for ${pascalName}Props {
 impl Widget<'_> for ${pascalName} {
 	type Props = ${pascalName}Props;
 
-	fn render(mut ctx: Ctx<'_>, props: ${pascalName}Props) {
+	fn render(mut ctx: Ctx<'_>, _props: ${pascalName}Props) {
 ${indent(indent(inner))}
 	}
 }
@@ -146,10 +146,16 @@ function buildNode(element: Element, handle: string): string {
 			const tag = element.tagName === 'BODY' ? 'div' : element.tagName.toLowerCase()
 
 			if (tag === 'svg') {
-				inner.push(`${handle}.child("${childIndex}", Icon).run(|mut props| {\n${indent(buildIcon(element, 'props'))}\n});`)
-			} else {
-				inner.push(`${handle}.child("${childIndex}", Dynamic).run("${tag}", |mut props| {\n${indent(buildNode(element, 'props'))}\n});`)
+				inner.push(`${handle}.child("${childIndex}", Icon).run(|props| {\n${indent(buildIcon(element, 'props'))}\n});`)
+
+				continue
 			}
+
+			const runFunc = element.children.length === 0 && element.classList.length === 0
+				? `|_| {}`
+				: `|mut props| {\n${indent(buildNode(element, 'props'))}\n}`
+
+			inner.push(`${handle}.child("${childIndex}", Dynamic).run("${tag}", ${runFunc});`)
 
 			continue
 		}
@@ -210,7 +216,7 @@ function indent(text: string) {
 
 function buildStyles(className: string) {
 	const styles = className.trim().split(/\s+/).map(convertStyle).join(', ')
-	return `&[${styles}]`
+	return `vec![${styles}]`
 }
 
 function convertStyle(node: string) {
@@ -262,7 +268,7 @@ function convertStyleParts(parts: string[]) {
 		use(parts, [is('inline'), is('block')], () => `Style::InlineBlock`),
 		use(parts, [is('block')], () => `Style::Block`),
 
-		use(parts, [is('rounded')], () => `Style::Rounded`),
+		use(parts, [is('rounded')], () => `Style::RoundedSmall`),
 
 		use(parts, [is('bg'), is('gray'), shade], ([_, __, shade]) => `Style::Color(Color::Fg(${shade}))`),
 		use(parts, [is('bg'), is('brand'), size, shade], ([_, __, ___, shade]) => `Style::Color(Color::Primary(${shade}))`),
